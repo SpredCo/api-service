@@ -1,0 +1,53 @@
+{
+  "name": "spred-api-service",
+  "version": "0.0.0",
+  "description": "API service for spreed project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./run.js",
+    "test": "istanbul cover _mocha -- test/test.js -R spec",
+    "preversion": "gulp lint && nnpm test",
+    "version": "gulp changelog && gulp doc && git add CHANGELOG.md doc",
+    "postversion": "git push origin master --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpredCo/api-service.git"
+  },
+  "author": "Maxime Guedj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpredCo/api-service/issues"
+  },
+  "homepage": "https://github.com/SpredCo/api-service#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "passport": "^0.3.2",
+    "passport-http-bearer": "^1.0.1",
+    "spred-common": "git+ssh://git@github.com/spredCo/common.git",
+    "spred-http-helper": "git+ssh://git@github.com/spredCo/http-helper.git"
+  },
+  "devDependencies": {
+    "api-doc-generator": "git+ssh://git@github.com/guedjm/api-doc-generator.git",
+    "chai": "^3.5.0",
+    "config": "^1.21.0",
+    "eslint": "^3.3.1",
+    "eslint-config-standard": "^6.0.0-beta.3",
+    "eslint-plugin-promise": "^2.0.1",
+    "eslint-plugin-standard": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-changelogmd": "^1.0.6",
+    "gulp-eslint": "^3.0.1",
+    "gulp-shell": "^0.5.2",
+    "mongoose": "^4.5.9",
+    "require-dir": "^0.3.0",
+    "supertest": "^2.0.0"
+  },
+  "files": [
+    "index.js",
+    "auth/",
+    "doc/",
+    "route/"
+  ]
+}

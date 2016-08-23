@@ -1,0 +1,15 @@
+dbConfig:
+  host: localhost
+  port: 27017
+  dbName: spred
+
+test:
+  dbConfig:
+    dbName: spred-api-test
+
+  server:
+    url: http://api.spred.local
+    port: 3000
+
+server:
+  port: 3000

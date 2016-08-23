@@ -1,0 +1,34 @@
+{
+  "user1": {
+    "email": "zuser1@test.com",
+    "password": "password",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "user1n": {
+    "email": "zuuser1@test.com",
+    "password": "password",
+    "first_name": "uMaxime",
+    "last_name": "uGuedj",
+    "picture_url": "http://google.fr"
+  },
+  "user2": {
+    "email": "zuser2@test.com",
+    "facebookId": "password",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "user3": {
+    "email": "puser3@test.com",
+    "password": "password",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "client": {
+    "name": "Test user",
+    "key": "TestUserKey",
+    "secret": "TestUserSecret"
+  },
+  "token1": "TestUserAccessToken",
+  "token2": "TestUserAccessToken2"
+}

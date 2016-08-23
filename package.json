@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./run.js",
     "test": "istanbul cover _mocha -- test/test.js -R spec",
-    "preversion": "gulp lint && nnpm test",
+    "preversion": "gulp lint && npm test",
     "version": "gulp changelog && gulp doc && git add CHANGELOG.md doc",
     "postversion": "git push origin master --tags"
   },

@@ -121,7 +121,7 @@ function followUser (req, res, next) {
           next(err);
         } else {
           me.following.forEach(function (elem) {
-            if (elem._id === req.params.id) {
+            if (elem._id.toString() === req.params.id) {
               httpHelper.sendReply(res, httpHelper.error.alreadyFollowing());
             }
           });
@@ -149,7 +149,7 @@ function unfollowUser (req, res, next) {
         } else {
           var find = false;
           me.following.forEach(function (elem) {
-            if (elem._id === req.params.id) {
+            if (elem._id.toString() === req.params.id) {
               find = true;
             }
           });

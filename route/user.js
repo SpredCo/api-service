@@ -6,6 +6,9 @@ function registerRoute (router) {
   router.patch('/users/me', updateUser);
   router.delete('/users/me', deleteUser);
 
+  router.post('/users/:id/follow', followUser);
+  router.post('/users/:id/unfollow', unfollowUser);
+
   router.get('/users/search/:email', searchUser);
 }
 
@@ -13,13 +16,25 @@ function getUserInfo (req, res, next) {
   if (req.params.id === 'me') {
     req.params.id = req.user._id;
   }
-  common.userModel.getById(req.params.id, function (err, fUser) {
-    if (err || fUser == null) {
-      httpHelper.sendReply(res, httpHelper.error.userNotFound());
-    } else {
-      httpHelper.sendReply(res, 200, fUser, next);
-    }
-  });
+  if (req.params.id[0] === '@') {
+    common.userModel.getByPseudo(req.params.id.substring(1), function (err, fUser) {
+      if (err) {
+        next(err);
+      } else if (fUser == null) {
+        httpHelper.sendReply(res, httpHelper.error.userNotFound());
+      } else {
+        httpHelper.sendReply(res, 200, fUser);
+      }
+    });
+  } else {
+    common.userModel.getById(req.params.id, req.params.id === 'me', function (err, fUser) {
+      if (err || fUser == null) {
+        httpHelper.sendReply(res, httpHelper.error.userNotFound());
+      } else {
+        httpHelper.sendReply(res, 200, fUser, next);
+      }
+    });
+  }
 }
 
 function updateUser (req, res, next) {
@@ -92,6 +107,65 @@ function searchUser (req, res, next) {
       next(err);
     } else {
       httpHelper.sendReply(res, 200, fUsers, next);
+    }
+  });
+}
+
+function followUser (req, res, next) {
+  common.userModel.getById(req.params.id, false, function (err, fUser) {
+    if (err || fUser == null) {
+      httpHelper.sendReply(res, httpHelper.error.userNotFound());
+    } else {
+      common.userModel.getById(req.user._id, true, function (err, me) {
+        if (err) {
+          next(err);
+        } else {
+          me.following.forEach(function (elem) {
+            if (elem._id === req.params.id) {
+              httpHelper.sendReply(res, httpHelper.error.alreadyFollowing());
+            }
+          });
+          me.follow(fUser, function (err) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 200, 'ok');
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
+function unfollowUser (req, res, next) {
+  common.userModel.getById(req.params.id, false, function (err, fUser) {
+    if (err || fUser == null) {
+      httpHelper.sendReply(res, httpHelper.error.userNotFound());
+    } else {
+      common.userModel.getById(req.user._id, true, function (err, me) {
+        if (err) {
+          next(err);
+        } else {
+          var find = false;
+          me.following.forEach(function (elem) {
+            if (elem._id === req.params.id) {
+              find = true;
+            }
+          });
+          if (find === false) {
+            httpHelper.sendReply(res, httpHelper.error.notFollowing());
+          } else {
+            me.unfollow(fUser, function (err) {
+              if (err) {
+                next(err);
+              } else {
+                httpHelper.sendReply(res, 200, 'ok');
+              }
+            });
+          }
+        }
+      });
     }
   });
 }

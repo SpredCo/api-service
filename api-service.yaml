@@ -101,6 +101,34 @@ api:
                       description: User deleted
                       type: string
           -
+            /v1/users/{id}/follow:
+              post:
+                summary: Follow an user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Follow success
+                      type: string
+                errors:
+                  - Already following
+                  - User not found
+          -
+            /v1/users/{id}/unfollow:
+              post:
+                summary: Unfollow an user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Unfollow success
+                      type: string
+                errors:
+                  - Not following
+                  - User not found
+          -
             /v1/users/search/{partial_email}:
               get:
                 summary: Search for users by email (partial)
@@ -119,6 +147,18 @@ api:
         code: 1
         message: Invalid request
         fix: Check the request parameters twice
+    -
+      Already following:
+        status: 400
+        code: 2
+        subcode: 4
+        message: Already following this user
+    -
+      Not following:
+        status: 400
+        code: 2
+        subcode: 5
+        message: Not following this user
     -
       Invalid User update:
         status: 401
@@ -154,6 +194,7 @@ api:
         obj:
           id: ""
           email: ""
+          pseudo: ""
           first_name: ""
           last_name: ""
           created_at: ""

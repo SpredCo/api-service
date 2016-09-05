@@ -16,15 +16,15 @@ describe('Testing user routes /v1/users/*', function () {
       if (err) {
         done(err);
       } else {
-        common.userModel.createPassword(fixture.user1.email, fixture.user1.password, fixture.user1.first_name, fixture.user1.last_name, function (err, cUser1) {
+        common.userModel.createPassword(fixture.user1.email, fixture.user1.password, fixture.user1.pseudo, fixture.user1.first_name, fixture.user1.last_name, function (err, cUser1) {
           if (err) {
             done(err);
           } else {
-            common.userModel.createFacebook(fixture.user2.email, fixture.user2.facebookId, fixture.user2.first_name, fixture.user2.last_name, '', function (err, cUser2) {
+            common.userModel.createFacebook(fixture.user2.email, fixture.user2.facebookId, fixture.user2.pseudo, fixture.user2.first_name, fixture.user2.last_name, '', function (err, cUser2) {
               if (err) {
                 done(err);
               } else {
-                common.userModel.createPassword(fixture.user3.email, fixture.user3.password, fixture.user3.first_name, fixture.user3.last_name, function (err) {
+                common.userModel.createPassword(fixture.user3.email, fixture.user3.password, fixture.user3.pseudo, fixture.user3.first_name, fixture.user3.last_name, function (err) {
                   if (err) {
                     done(err);
                   } else {
@@ -77,6 +77,26 @@ describe('Testing user routes /v1/users/*', function () {
     it('Should reply user2 information', function (done) {
       apiSrv
         .get('/v1/users/' + user2._id)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.id).to.eql(user2._id.toString());
+            expect(res.body.email).to.equal(user2.email);
+            expect(res.body.first_name).to.equal(user2.firstName);
+            expect(res.body.last_name).to.equal(user2.lastName);
+            expect(res.body.picture_url).to.equal(user2.pictureUrl);
+            done();
+          }
+        });
+    });
+
+    it('Should reply user2 information if param is @user2pseudo', function (done) {
+      apiSrv
+        .get('/v1/users/@' + user2.pseudo)
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
         .expect(200)
@@ -156,7 +176,7 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, function (err, fUser) {
+            common.userModel.getById(user1._id, true, function (err, fUser) {
               if (err) {
                 done(err);
               } else {
@@ -263,6 +283,126 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
+  describe('Testing user follow (POST /v1/users/:id/follow)', function () {
+    it('Should follow the user', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            common.userModel.getById(user1._id, true, function (err, fUser) {
+              if (err) {
+                done(err);
+              } else {
+                expect(fUser.following).to.have.lengthOf(1);
+                done();
+              }
+            });
+          }
+        });
+    });
+
+    it('Should reply an error if user already follow the user', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(2);
+            expect(res.body.sub_code).to.equal(4);
+            expect(res.body.message).to.equal('Already following this user');
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if invalid user id', function (done) {
+      apiSrv
+        .post('/v1/users/fefz/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(2);
+            expect(res.body.sub_code).to.equal(1);
+            expect(res.body.message).to.equal('Unable to find user');
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing user unfollow (POST /v1/users/:id/unfollow)', function () {
+    it('Should unfollow the user', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/unfollow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            common.userModel.getById(user1._id, true, function (err, fUser) {
+              if (err) {
+                done(err);
+              } else {
+                expect(fUser.following).to.have.lengthOf(0);
+                done();
+              }
+            });
+          }
+        });
+    });
+
+    it('Should reply an error if user not following the user', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/unfollow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(2);
+            expect(res.body.sub_code).to.equal(5);
+            expect(res.body.message).to.equal('Not following this user');
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if invalid user id', function (done) {
+      apiSrv
+        .post('/v1/users/fefz/unfollow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(2);
+            expect(res.body.sub_code).to.equal(1);
+            expect(res.body.message).to.equal('Unable to find user');
+            done();
+          }
+        });
+    });
+  });
+
   describe('Testing user deletion (DELETE /v1/users/me)', function () {
     it('Should delete the authenticated user', function (done) {
       apiSrv
@@ -274,7 +414,7 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, function (err, fUser) {
+            common.userModel.getById(user1._id, true, function (err, fUser) {
               if (err) {
                 done(err);
               } else {

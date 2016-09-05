@@ -2,12 +2,14 @@
   "user1": {
     "email": "zuser1@test.com",
     "password": "password",
+    "pseudo": "zuserPseudo",
     "first_name": "Maxime",
     "last_name": "Guedj"
   },
   "user1n": {
     "email": "zuuser1@test.com",
     "password": "password",
+    "pseudo": "zuuserPseudo",
     "first_name": "uMaxime",
     "last_name": "uGuedj",
     "picture_url": "http://google.fr"
@@ -15,12 +17,14 @@
   "user2": {
     "email": "zuser2@test.com",
     "facebookId": "password",
+    "pseudo": "zuser2Pseudo",
     "first_name": "Maxime",
     "last_name": "Guedj"
   },
   "user3": {
     "email": "puser3@test.com",
     "password": "password",
+    "pseudo": "puser3Pseudo0",
     "first_name": "Maxime",
     "last_name": "Guedj"
   },

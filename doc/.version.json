@@ -1,5 +1,15 @@
 [
   {
+    "version": "0.2.0",
+    "author": "guedj_m",
+    "date": "Mon Sep 05 2016 18:23:33 GMT+0200 (CEST)",
+    "changes": [
+      "Add pseudo to user model",
+      "Add follow route",
+      "Add unfollow route"
+    ]
+  },
+  {
     "version": "0.1.0",
     "author": "guedj_m",
     "date": "Tue Aug 23 2016 15:46:59 GMT+0200 (CEST)",

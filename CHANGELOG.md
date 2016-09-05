@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+* Add pseudo to user model
+* Add follow route
+* Add unfollow route
+
+*guedj_m, Mon Sep 05 2016 18:23:33 GMT+0200 (CEST)*
+
+---
 ## 0.1.0
 
 * Create api skeleton

@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.2.1",
+    "author": "guedj_m",
+    "date": "Wed Sep 14 2016 15:23:57 GMT+0200 (CEST)",
+    "changes": [
+      "Fix documentation"
+    ]
+  },
+  {
     "version": "0.2.0",
     "author": "guedj_m",
     "date": "Mon Sep 05 2016 18:23:33 GMT+0200 (CEST)",

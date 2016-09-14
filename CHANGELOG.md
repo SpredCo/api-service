@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+* Fix documentation
+
+*guedj_m, Wed Sep 14 2016 15:23:57 GMT+0200 (CEST)*
+
+---
 ## 0.2.0
 
 * Add pseudo to user model

@@ -171,8 +171,8 @@ function unfollowUser (req, res, next) {
   });
 }
 
-function reportUser(req, res, next) {
-  if (req.body.motif === undefined || req.params.id == req.user._id.toString()) {
+function reportUser (req, res, next) {
+  if (req.body.motif === undefined || req.params.id === req.user._id.toString()) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.userModel.getById(req.params.id, false, function (err, fUser) {

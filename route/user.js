@@ -8,6 +8,7 @@ function registerRoute (router) {
 
   router.post('/users/:id/follow', followUser);
   router.post('/users/:id/unfollow', unfollowUser);
+  router.post('/users/:id/report', reportUser);
 
   router.get('/users/search/:email', searchUser);
 }
@@ -129,7 +130,7 @@ function followUser (req, res, next) {
             if (err) {
               next(err);
             } else {
-              httpHelper.sendReply(res, 200, 'ok');
+              httpHelper.sendReply(res, 200, { 'result': 'ok' });
             }
           });
         }
@@ -160,7 +161,7 @@ function unfollowUser (req, res, next) {
               if (err) {
                 next(err);
               } else {
-                httpHelper.sendReply(res, 200, 'ok');
+                httpHelper.sendReply(res, 200, { 'result': 'ok' });
               }
             });
           }
@@ -168,6 +169,26 @@ function unfollowUser (req, res, next) {
       });
     }
   });
+}
+
+function reportUser(req, res, next) {
+  if (req.body.motif === undefined || req.params.id == req.user._id.toString()) {
+    httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
+  } else {
+    common.userModel.getById(req.params.id, false, function (err, fUser) {
+      if (err || fUser == null) {
+        httpHelper.sendReply(res, httpHelper.error.userNotFound());
+      } else {
+        common.reportModel.createNew(fUser, req.user._id, req.body.motif, function (err, cReport) {
+          if (err) {
+            next(err);
+          } else {
+            httpHelper.sendReply(res, 201, {'result': 'ok'});
+          }
+        });
+      }
+    });
+  }
 }
 
 module.exports.registerRoute = registerRoute;

@@ -403,6 +403,81 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
+  describe('Testing user report (POST /v1/users/:id/report)', function () {
+    it('Should reply ok', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/report')
+        .send({ 'motif': 'nul' })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(201)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.equal('ok');
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if wrong user id', function (done) {
+      apiSrv
+        .post('/v1/users/fefz/report')
+        .send({ 'motif': 'nul à chier' })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(2);
+            expect(res.body.sub_code).to.equal(1);
+            expect(res.body.message).to.equal('Unable to find user');
+            done();
+          }
+        });
+    });
+
+    it('Should an error if trying to report himself', function (done) {
+      apiSrv
+        .post('/v1/users/' + user1._id + '/report')
+        .send({ 'motif': 'nul' })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            console.log(res.body);
+            expect(res.body.code).to.equal(1);
+            expect(res.body.message).to.equal('Invalid request');
+            done();
+          }
+        });
+    });
+
+    it('Should an error if no motif sent', function (done) {
+      apiSrv
+        .post('/v1/users/' + user2._id + '/report')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            console.log(res.body);
+            expect(res.body.code).to.equal(1);
+            expect(res.body.message).to.equal('Invalid request');
+            done();
+          }
+        });
+    });
+  });
+
   describe('Testing user deletion (DELETE /v1/users/me)', function () {
     it('Should delete the authenticated user', function (done) {
       apiSrv

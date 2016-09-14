@@ -129,6 +129,27 @@ api:
                   - Not following
                   - User not found
           -
+            /v1/users/{id}/report:
+              post:
+                summary: Report an user
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    motif:
+                      description: report motif
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    200:
+                      description: Report success
+                      type: string
+                errors:
+                  - Invalid request
+                  - User not found
+          -
             /v1/users/search/{partial_email}:
               get:
                 summary: Search for users by email (partial)

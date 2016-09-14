@@ -200,6 +200,9 @@ api:
           created_at: ""
           updated_at: ""
           picture_url: ""
+          following:
+            -
+              User
     -
       User Array:
         description: Array of User object

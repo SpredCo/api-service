@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+
+* Add route to report user
+
+*guedj_m, Wed Sep 14 2016 16:34:26 GMT+0200 (CEST)*
+
+---
 ## 0.2.1
 
 * Fix documentation

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Spred API service</title>
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/uber-font.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <script src="../js/jquery-1.12.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/doc.js"></script>
+        <script>
+            var cV = "0.3.0";
+            $(document).ready(function () {
+                setTimeout(loadVersions, 500);
+            });
+        </script>
+    </head>
+    
+    <body>
+        <header class="header">
+            <div class="container">
+                <div><a href="../index.html" class="header-link"><h4>Spred API service<span class="version">v 0.3.0</span></h4></a>
+                </div>
+            </div>
+        </header>
+        <div class="container page-layout">
+            <div class="page_content">
+                <div class="row">
+                    <!-- Menu-->
+                    <div class="col-sm-3 border-right section-left">
+                        <div class="sidebar-nav">
+                            <div class="bloc">
+                                <h4><a href="#general">GENERAL</a></h4>
+                                <ul>
+                                    <li><a href="#paragraph-information">Information</a>
+                                    </li>
+                                    <li><a href="#paragraph-authorization">Authorization</a>
+                                    </li>
+                                    <li><a href="#paragraph-request-and-reply-format">Request and Reply format</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bloc">
+                                <h4><a href="#api">API REFERENCE</a></h4>
+                                <ul>
+                                    <li><a href="#routes-user">User</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bloc">
+                                <h4><a href="#object">OBJECTS</a></h4>
+                                <ul>
+                                    <li><a href="#object-error">Error</a>
+                                    </li>
+                                    <li><a href="#object-user">User</a>
+                                    </li>
+                                    <li><a href="#object-user-array">User Array</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bloc">
+                                <h4><a href="#errors">ERRORS</a></h4>
+                                <ul>
+                                    <li><a href="#error-invalid-request">Invalid request</a>
+                                    </li>
+                                    <li><a href="#error-already-following">Already following</a>
+                                    </li>
+                                    <li><a href="#error-not-following">Not following</a>
+                                    </li>
+                                    <li><a href="#error-invalid-user-update">Invalid User update</a>
+                                    </li>
+                                    <li><a href="#error-user-exists">User exists</a>
+                                    </li>
+                                    <li><a href="#error-user-not-found">User not found</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bloc">
+                                <h4><a href="#changelog">CHANGELOG</a></h4>
+                            </div>
+                            <div id="versionBlk" class="bloc">
+                                <h4><a href="../index.html">VERSIONS</a></h4>
+                                <ul id="versionList"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Content-->
+                    <div class="col-sm-9 border-left section-right">
+                        <div class="doc-content">
+                            <div class="part">
+                                <h1 id="general">General</h1>
+                                <hr>
+                                <div class="paragraph-header">
+                                    <h2 id="paragraph-information">Information</h2>
+                                    <p>
+                                        <p>The api service of Spred, allows user (througt registred client) to interact
+                                            and use the Spred service. To access resources from the api service, the <em>OAuth2 Authorization Framework</em> as
+                                            been implemented. For more information, check the <a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a>.
+                                            <br/>
+                                        </p>
+                                    </p>
+                                </div>
+                                <div class="paragraph-header">
+                                    <h2 id="paragraph-authorization">Authorization</h2>
+                                    <p>
+                                        <p>All requests sent to the api service MUST be authorized with an <em>Access token</em> (of
+                                            type bearer).
+                                            <br/>The steps to obtain an access token are explained in the <a href="http://login.sharemyscreen.fr:3000/doc">login service documentation</a>
+                                            <br/>Once you get your access token, you will need to include it in the <strong>HTTP Header</strong> of
+                                            the requests:
+                                            <br/>
+                                        </p>
+<pre><code>Authorization: Bearer &lt;access_token&gt;
+</code></pre>
+
+                                        <p>If a request is unauthenticated, the server will reply a status code <strong>403</strong> with
+                                            a body <strong>Unauthorized</strong>.</p>
+                                    </p>
+                                </div>
+                                <div class="paragraph-header">
+                                    <h2 id="paragraph-request-and-reply-format">Request and Reply format</h2>
+                                    <p>
+                                        <p>All requests must be <strong>HTTP</strong> request.
+                                            <br/>Request body must be <strong>JSON</strong> formated.
+                                            <br/>Reply are <strong>JSON</strong> formated object in <strong>snake_case</strong>.</p>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="part">
+                                <h1 id="api">API Reference</h1>
+                                <hr>
+                                <br>
+                                <div class="path-group">
+                                    <h2 id="routes-user">User</h2>
+                                    <p>
+                                        <p>User related requests</p>
+                                    </p>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Method</th>
+                                                <th>Endpoint</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="label label-primary">GET</span>
+                                                </td>
+                                                <td>/v1/users/{id}</td>
+                                                <td><a href="#routes-user-v1-users-{id}-get"><p>Get user information.</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-warning">PATCH</span>
+                                                </td>
+                                                <td>/v1/users/{id}</td>
+                                                <td><a href="#routes-user-v1-users-{id}-patch"><p>Update user information.</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-danger">DELETE</span>
+                                                </td>
+                                                <td>/v1/users/{id}</td>
+                                                <td><a href="#routes-user-v1-users-{id}-delete"><p>Delete the user</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-success">POST</span>
+                                                </td>
+                                                <td>/v1/users/{id}/follow</td>
+                                                <td><a href="#routes-user-v1-users-{id}-follow-post"><p>Follow an user</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-success">POST</span>
+                                                </td>
+                                                <td>/v1/users/{id}/unfollow</td>
+                                                <td><a href="#routes-user-v1-users-{id}-unfollow-post"><p>Unfollow an user</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-success">POST</span>
+                                                </td>
+                                                <td>/v1/users/{id}/report</td>
+                                                <td><a href="#routes-user-v1-users-{id}-report-post"><p>Report an user</p>
+</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-primary">GET</span>
+                                                </td>
+                                                <td>/v1/users/search/{partial_email}</td>
+                                                <td><a href="#routes-user-v1-users-search-{partial_email}-get"><p>Search for users by email (partial)</p>
+</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <br>
+                                <div id="routes-user-v1-users-{id}-get" class="panel panel-primary method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">GET /v1/users/{id}</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Get user information.</p>
+                                        </div>
+                                        <div class="method-description method-component">
+                                            <p>If {id} is equal to 'me', return the current user information.</p>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Ok</p>
+                                                        </td>
+                                                        <td><a href="#object-user">User</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Errors</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HTTP status</th>
+                                                        <th>Code</th>
+                                                        <th>SubCode</th>
+                                                        <th>Message</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-error">404</th>
+                                                        <td>2</td>
+                                                        <td>1</td>
+                                                        <td>
+                                                            <p>Unable to find user</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>Check user publicId twice</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-{id}-patch" class="panel panel-warning method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">PATCH /v1/users/{id}</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Update user information.</p>
+                                        </div>
+                                        <div class="method-description method-component">
+                                            <p>/!\ {id} MUST be set to 'me' or reply will be a 404 not found</p>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Parameters</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Description</th>
+                                                        <th>Required</th>
+                                                        <th>In</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>email</td>
+                                                        <td>
+                                                            <p>The new user email</p>
+                                                        </td>
+                                                        <td>false</td>
+                                                        <td>body</td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>first_name</td>
+                                                        <td>
+                                                            <p>The new user first name</p>
+                                                        </td>
+                                                        <td>false</td>
+                                                        <td>body</td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>last_name</td>
+                                                        <td>
+                                                            <p>The new user last name</p>
+                                                        </td>
+                                                        <td>false</td>
+                                                        <td>body</td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>picture_url</td>
+                                                        <td>
+                                                            <p>The new picture url</p>
+                                                        </td>
+                                                        <td>false</td>
+                                                        <td>body</td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Update success</p>
+                                                        </td>
+                                                        <td><a href="#object-user">User</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Errors</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HTTP status</th>
+                                                        <th>Code</th>
+                                                        <th>SubCode</th>
+                                                        <th>Message</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-error">401</th>
+                                                        <td>2</td>
+                                                        <td>3</td>
+                                                        <td>
+                                                            <p>Impossible to update email address with an external api login</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>You can't update the email of an user registred with an external api</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="response-error">403</th>
+                                                        <td>2</td>
+                                                        <td>1</td>
+                                                        <td>
+                                                            <p>User exists (email address already in use)</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-{id}-delete" class="panel panel-danger method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">DELETE /v1/users/{id}</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Delete the user</p>
+                                        </div>
+                                        <div class="method-description method-component">
+                                            <p>/!\ {id} MUST be set to 'me' or reply will be a 404 not found</p>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>User deleted</p>
+                                                        </td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-{id}-follow-post" class="panel panel-post method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">POST /v1/users/{id}/follow</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Follow an user</p>
+                                        </div>
+                                        <div class="method-description method-component"></div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Follow success</p>
+                                                        </td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Errors</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HTTP status</th>
+                                                        <th>Code</th>
+                                                        <th>SubCode</th>
+                                                        <th>Message</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-error">400</th>
+                                                        <td>2</td>
+                                                        <td>4</td>
+                                                        <td>
+                                                            <p>Already following this user</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="response-error">404</th>
+                                                        <td>2</td>
+                                                        <td>1</td>
+                                                        <td>
+                                                            <p>Unable to find user</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>Check user publicId twice</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-{id}-unfollow-post" class="panel panel-post method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">POST /v1/users/{id}/unfollow</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Unfollow an user</p>
+                                        </div>
+                                        <div class="method-description method-component"></div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Unfollow success</p>
+                                                        </td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Errors</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HTTP status</th>
+                                                        <th>Code</th>
+                                                        <th>SubCode</th>
+                                                        <th>Message</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-error">400</th>
+                                                        <td>2</td>
+                                                        <td>5</td>
+                                                        <td>
+                                                            <p>Not following this user</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="response-error">404</th>
+                                                        <td>2</td>
+                                                        <td>1</td>
+                                                        <td>
+                                                            <p>Unable to find user</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>Check user publicId twice</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-{id}-report-post" class="panel panel-post method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">POST /v1/users/{id}/report</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Report an user</p>
+                                        </div>
+                                        <div class="method-description method-component"></div>
+                                        <div class="method-component">
+                                            <h3>Parameters</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Description</th>
+                                                        <th>Required</th>
+                                                        <th>In</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>motif</td>
+                                                        <td>
+                                                            <p>report motif</p>
+                                                        </td>
+                                                        <td>true</td>
+                                                        <td>body</td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Report success</p>
+                                                        </td>
+                                                        <td>string</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="method-component">
+                                            <h3>Errors</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HTTP status</th>
+                                                        <th>Code</th>
+                                                        <th>SubCode</th>
+                                                        <th>Message</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-error">400</th>
+                                                        <td>1</td>
+                                                        <td></td>
+                                                        <td>
+                                                            <p>Invalid request</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>Check the request parameters twice</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="response-error">404</th>
+                                                        <td>2</td>
+                                                        <td>1</td>
+                                                        <td>
+                                                            <p>Unable to find user</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>Check user publicId twice</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="routes-user-v1-users-search-{partial_email}-get" class="panel panel-primary method-bloc">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-5">GET /v1/users/search/{partial_email}</div>
+                                            <div class="cal-sm-7 tag-line">
+                                                <div class="label label-info tag"><a href="#paragraph-authorization" style="color: white">Bearer Auth</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="method-summary method-component">
+                                            <p>Search for users by email (partial)</p>
+                                        </div>
+                                        <div class="method-description method-component"></div>
+                                        <div class="method-component">
+                                            <h3>Responses</h3>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Http Status Code</th>
+                                                        <th>Description</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="response-ok">200</th>
+                                                        <td>
+                                                            <p>Search result</p>
+                                                        </td>
+                                                        <td><a href="#object-user-array">User Array</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="part">
+                                <h1 id="object">Objects</h1>
+                                <hr>
+                                <br>
+                                <h2 id="object-error">Error</h2>
+                                <div class="obj-description">
+                                    <p>Error object (sub_code is facultative)</p>
+                                </div><pre><code class="prettyprint">{
+  <span class=json-key>code</span>: <span class=json-value>0</span>,
+  <span class=json-key>sub_code</span>: <span class=json-value>0</span>,
+  <span class=json-key>message</span>: <span class=json-string>""</span>
+}</code></pre>
+                                <br>
+                                <h2 id="object-user">User</h2>
+                                <div class="obj-description">
+                                    <p>User object</p>
+                                </div><pre><code class="prettyprint">{
+  <span class=json-key>id</span>: <span class=json-string>""</span>,
+  <span class=json-key>email</span>: <span class=json-string>""</span>,
+  <span class=json-key>pseudo</span>: <span class=json-string>""</span>,
+  <span class=json-key>first_name</span>: <span class=json-string>""</span>,
+  <span class=json-key>last_name</span>: <span class=json-string>""</span>,
+  <span class=json-key>created_at</span>: <span class=json-string>""</span>,
+  <span class=json-key>updated_at</span>: <span class=json-string>""</span>,
+  <span class=json-key>picture_url</span>: <span class=json-string>""</span>,
+  <span class=json-key>following</span>: [
+    <span class=json-string>"User"</span>
+  ]
+}</code></pre>
+                                <br>
+                                <h2 id="object-user-array">User Array</h2>
+                                <div class="obj-description">
+                                    <p>Array of User object</p>
+                                </div><pre><code class="prettyprint">[
+  {
+    <span class=json-key>id</span>: <span class=json-string>""</span>,
+    <span class=json-key>email</span>: <span class=json-string>""</span>,
+    <span class=json-key>first_name</span>: <span class=json-string>""</span>,
+    <span class=json-key>last_name</span>: <span class=json-string>""</span>,
+    <span class=json-key>created_at</span>: <span class=json-string>""</span>,
+    <span class=json-key>updated_at</span>: <span class=json-string>""</span>,
+    <span class=json-key>picture_url</span>: <span class=json-string>""</span>
+  }
+]</code></pre>
+                                <br>
+                            </div>
+                            <div class="part">
+                                <h1 id="errors">Possible error response</h1>
+                                <hr>
+                                <br>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>HTTP status</th>
+                                            <th>Code</th>
+                                            <th>SubCode</th>
+                                            <th>Message</th>
+                                            <th>Comment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th id="error-invalid-request" class="response-error">400</th>
+                                            <td>1</td>
+                                            <td></td>
+                                            <td>
+                                                <p>Invalid request</p>
+                                            </td>
+                                            <td>
+                                                <p>Check the request parameters twice</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th id="error-already-following" class="response-error">400</th>
+                                            <td>2</td>
+                                            <td>4</td>
+                                            <td>
+                                                <p>Already following this user</p>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th id="error-not-following" class="response-error">400</th>
+                                            <td>2</td>
+                                            <td>5</td>
+                                            <td>
+                                                <p>Not following this user</p>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th id="error-invalid-user-update" class="response-error">401</th>
+                                            <td>2</td>
+                                            <td>3</td>
+                                            <td>
+                                                <p>Impossible to update email address with an external api login</p>
+                                            </td>
+                                            <td>
+                                                <p>You can't update the email of an user registred with an external api</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th id="error-user-exists" class="response-error">403</th>
+                                            <td>2</td>
+                                            <td>1</td>
+                                            <td>
+                                                <p>User exists (email address already in use)</p>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th id="error-user-not-found" class="response-error">404</th>
+                                            <td>2</td>
+                                            <td>1</td>
+                                            <td>
+                                                <p>Unable to find user</p>
+                                            </td>
+                                            <td>
+                                                <p>Check user publicId twice</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="part">
+                                <h1 id="changelog">Changelog</h1>
+                                <hr>
+                                <br><pre><code><br><span>* Add route to report user</span><br><br></code></pre>
+                                <br><i>By guedj_m, Wed Sep 14 2016 16:34:26 GMT+0200 (CEST)</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

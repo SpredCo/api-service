@@ -6,7 +6,7 @@ function registerRoute (router) {
   router.get('/inbox/conversation/:id', getConversation);
   router.get('/inbox/conversation/:conv_id/message/:id', getMessage);
 
-  router.post('/inbox/conversation/new', createNewConversation);
+  router.post('/inbox/conversation', createNewConversation);
   router.post('/inbox/conversation/:id/message', sendNewMessage);
   router.post('/inbox/conversation/:conv_id/message/:id/read', readMessage);
 }
@@ -40,10 +40,10 @@ function getMessage (req, res, next) {
     } else if (fConversation == null) {
       httpHelper.sendReply(res, httpHelper.error.conversationNotFound());
     } else {
-      common.messageModel.getByConversationAndId(req.params.conv_id, req.params.id, function (err, fMessage) {
+      common.messageModel.getByIdWithRead(req.params.id, req.user, function (err, fMessage) {
         if (err) {
           next(err);
-        } else if (fMessage) {
+        } else if (fMessage == null) {
           httpHelper.sendReply(res, httpHelper.error.messageNotFound());
         } else {
           httpHelper.sendReply(res, 200, fMessage);
@@ -55,14 +55,26 @@ function getMessage (req, res, next) {
 
 function createNewConversation (req, res, next) {
   if (req.body.object === undefined || req.body.members === undefined || Array.isArray(req.body.members) === false ||
-      req.body.content === undefined) {
+      req.body.members.length === 0 || req.body.content === undefined || common.utils.arrayHasDuplicate(req.body.members) ||
+      req.body.members.indexOf(req.user._id.toString()) === -1) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
-    common.conversationModel.sendNewMessage(req.body.object, req.body.members, true, req.user, req.body.content, function (err, cConversation, cMessage) {
+    common.userModel.usersExist(req.body.members, function (err, result) {
       if (err) {
-        httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
+        next(err);
+      } else if (result === false) {
+        httpHelper.sendReply(res, httpHelper.error.userNotFound());
       } else {
-        httpHelper.sendReply(res, 201, cConversation);
+        common.conversationModel.sendNewMessage(req.body.object, req.body.members, true, req.user._id, req.body.content, function (err, cConversation, cMessage) {
+          if (err) {
+            next(err);
+          } else {
+            var result = cConversation.toObject({ print: true });
+            result.msg = cMessage.toObject({ print: true });
+            result.msg.read = true;
+            httpHelper.sendReply(res, 201, result);
+          }
+        });
       }
     });
   }
@@ -72,7 +84,7 @@ function sendNewMessage (req, res, next) {
   if (req.body.content === undefined) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
-    common.conversationModel.getByIdAndUser(req.params.id, req.user, function (err, fConversation) {
+    common.conversationModel.getByIdAndUser(req.params.id, req.user._id, function (err, fConversation) {
       if (err) {
         next(err);
       } else if (fConversation == null) {
@@ -80,11 +92,19 @@ function sendNewMessage (req, res, next) {
       } else if (fConversation.canAnswer === false) {
         httpHelper.sendReply(res, httpHelper.error.cannotReply());
       } else {
-        fConversation.sendNewMessage(req.user, req.body.content, function (err, cMessage) {
+        common.conversationModel.getById(req.params.id, function (err, fConversation) {
           if (err) {
             next(err);
           } else {
-            httpHelper.sendReply(res, 201, cMessage);
+            fConversation.sendNewMessage(req.user._id, req.body.content, function (err, cMessage) {
+              if (err) {
+                next(err);
+              } else {
+                var result = cMessage.toObject({ print: true });
+                result.read = true;
+                httpHelper.sendReply(res, 201, result);
+              }
+            });
           }
         });
       }
@@ -102,7 +122,7 @@ function readMessage (req, res, next) {
       } else if (fConversation == null) {
         httpHelper.sendReply(res, httpHelper.error.conversationNotFound());
       } else {
-        common.messageModel.getByUserMessage(req.user, req.params.id, function (err, fMsg) {
+        common.messageReadModel.getByUserMessage(req.user._id, req.params.id, function (err, fMsg) {
           if (err) {
             next(err);
           } else if (fMsg == null) {

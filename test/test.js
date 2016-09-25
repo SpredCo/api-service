@@ -19,7 +19,7 @@ before(function (done) {
         done(err);
       } else {
         console.log('Database dropped');
-        const app = apiApp.getApp(true);
+        const app = apiApp.getApp(false);
 
         app.listen(config.get('server.port'), function () {
           done();

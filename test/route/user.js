@@ -451,7 +451,6 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            console.log(res.body);
             expect(res.body.code).to.equal(1);
             expect(res.body.message).to.equal('Invalid request');
             done();
@@ -469,7 +468,6 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            console.log(res.body);
             expect(res.body.code).to.equal(1);
             expect(res.body.message).to.equal('Invalid request');
             done();

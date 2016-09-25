@@ -1,0 +1,34 @@
+{
+  "client": {
+    "name": "testInbox",
+    "key": "testInbox",
+    "secret": "testInbox"
+  },
+  "user1": {
+    "email": "user1@inbox.com",
+    "password": "password",
+    "pseudo": "user1Inbox",
+    "last_name": "User",
+    "first_name": "Inbox"
+  },
+  "user2": {
+    "email": "user2@inbox.com",
+    "password": "password",
+    "pseudo": "user2Inbox",
+    "last_name": "User",
+    "first_name": "Inbox"
+  },
+  "user3": {
+    "email": "user3@inbox.com",
+    "password": "password",
+    "pseudo": "user3Inbox",
+    "last_name": "User",
+    "first_name": "Inbox"
+  },
+  "token1": "tokenInbox1",
+  "token2": "tokenInbox2",
+  "token3": "tokenInbox3",
+  "object": "Test",
+  "content1": "Hello",
+  "content2": "Salut"
+}

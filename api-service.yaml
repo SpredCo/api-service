@@ -160,6 +160,102 @@ api:
                     200:
                       description: Search result
                       type: User Array
+    -
+      Inbox:
+        text: Inbox related routes
+        url:
+          -
+            /v1/inbox:
+              get:
+                summary: Get user inbox
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User inbox
+                      type: Conversation Array
+          -
+            /v1/inbox/conversation/{id}:
+              get:
+                summary: Get a conversation
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Conversation
+                      type: Conversation
+                errors:
+                  - Conversation not found
+              post:
+                summary: Reply to the conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    content:
+                      description: Message to send
+                      in: body
+                      type: string
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Message sent
+                      type: Message
+                errors:
+                  - Invalid request
+                  - Conversation not found
+                  - Cannot reply
+
+          -
+            /v1/inbox/conversation/{conversationId}/message/{messageId}:
+              get:
+                summary: Get a message
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: The message
+                      type: Message
+                errors:
+                  - Conversation not found
+                  - Message not found
+          -
+            /v1/inbox/conversation:
+              post:
+                summary: Create a new conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    object:
+                      description: Conversation object
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    members:
+                      description: Conversation members (creator must be in this array)
+                      type: User array
+                      in: body
+                      required: true
+                  -
+                    content:
+                      description: First message content
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Conversation created
+                      type: Conversation
+                errors:
+                  - Invalid request
+                  - User not found
 
   errors:
     -
@@ -181,6 +277,12 @@ api:
         subcode: 5
         message: Not following this user
     -
+      Cannot Reply:
+        status: 400
+        code: 3
+        subcode: 1
+        message: Cannot reply to this conversation
+    -
       Invalid User update:
         status: 401
         code: 2
@@ -200,6 +302,18 @@ api:
         subcode: 1
         message: Unable to find user
         fix: Check user publicId twice
+    -
+      Conversation not found:
+        status: 404
+        code: 3
+        subcode: 1
+        message: Unable to find conversation
+    -
+      Message not found:
+        status: 404
+        code: 4
+        subcode: 1
+        message: Unable to find message
 
   objects:
     -
@@ -236,3 +350,45 @@ api:
             created_at: ""
             updated_at: ""
             picture_url: ""
+    -
+      Message:
+        description: Message object
+        obj:
+          conversation: ""
+          from: ""
+          content: ""
+          read: ""
+          created_at: ""
+    -
+      Message Array:
+        description: Array of message
+        obj:
+          -
+            conversation: ""
+            from: ""
+            content: ""
+            read: ""
+            created_at: ""
+    -
+      Conversation:
+        description: Conversation object
+        obj:
+          object: ""
+          members: "User Array"
+          can_answer: ""
+          last_msg: ""
+          created_at: ""
+          msg:
+            - "Message Array"
+    -
+      Conversation Array:
+        description: Conversation array
+        obj:
+          -
+            object: ""
+            members: "User Array"
+            can_answer: ""
+            last_msg: ""
+            created_at: ""
+            msg:
+              - "Message Array"

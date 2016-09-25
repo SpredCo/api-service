@@ -93,7 +93,7 @@ function sendNewMessage (req, res, next) {
 }
 
 function readMessage (req, res, next) {
-  if (req.body.read === undefined && typeof(req.body.read) !== 'boolean') {
+  if (req.body.read === undefined && typeof (req.body.read) !== 'boolean') {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.conversationModel.getByIdAndUser(req.params.conv_id, req.user, function (err, fConversation) {
@@ -112,7 +112,7 @@ function readMessage (req, res, next) {
               if (err) {
                 next(err);
               } else {
-                httpHelper.sendReply(res, 201, { result: 'ok' })
+                httpHelper.sendReply(res, 201, { result: 'ok' });
               }
             });
           }
@@ -121,6 +121,5 @@ function readMessage (req, res, next) {
     });
   }
 }
-
 
 module.exports.registerRoute = registerRoute;

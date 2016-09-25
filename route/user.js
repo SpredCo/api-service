@@ -29,7 +29,9 @@ function getUserInfo (req, res, next) {
     });
   } else {
     common.userModel.getById(req.params.id, req.params.id === 'me', function (err, fUser) {
-      if (err || fUser == null) {
+      if (err) {
+        next(err);
+      } else if (fUser == null) {
         httpHelper.sendReply(res, httpHelper.error.userNotFound());
       } else {
         httpHelper.sendReply(res, 200, fUser, next);
@@ -114,7 +116,9 @@ function searchUser (req, res, next) {
 
 function followUser (req, res, next) {
   common.userModel.getById(req.params.id, false, function (err, fUser) {
-    if (err || fUser == null) {
+    if (err) {
+      next(err);
+    } else if (fUser == null) {
       httpHelper.sendReply(res, httpHelper.error.userNotFound());
     } else {
       common.userModel.getById(req.user._id, true, function (err, me) {
@@ -141,7 +145,9 @@ function followUser (req, res, next) {
 
 function unfollowUser (req, res, next) {
   common.userModel.getById(req.params.id, false, function (err, fUser) {
-    if (err || fUser == null) {
+    if (err) {
+      next(err);
+    } else if (fUser == null) {
       httpHelper.sendReply(res, httpHelper.error.userNotFound());
     } else {
       common.userModel.getById(req.user._id, true, function (err, me) {
@@ -176,7 +182,9 @@ function reportUser (req, res, next) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.userModel.getById(req.params.id, false, function (err, fUser) {
-      if (err || fUser == null) {
+      if (err) {
+        next(err);
+      } else if (fUser == null) {
         httpHelper.sendReply(res, httpHelper.error.userNotFound());
       } else {
         common.reportModel.createNew(fUser, req.user._id, req.body.motif, function (err, cReport) {

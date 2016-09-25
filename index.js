@@ -10,6 +10,7 @@ var apiApp = null;
 var apiRouter = null;
 
 const userRouter = require('./route/user');
+const inboxRouter = require('./route/inbox');
 
 function getApp (log) {
   logger.info('Initializing api app ...');
@@ -28,6 +29,7 @@ function getApp (log) {
 
   // Register all routes
   userRouter.registerRoute(apiRouter);
+  inboxRouter.registerRoute(apiRouter);
 
   apiApp.use('/v1', apiRouter);
   apiApp.use('/doc', express.static(path.join(__dirname, '/doc'), {dotfiles: 'allow'}));

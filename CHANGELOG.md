@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+* Integrate inbox !
+
+*guedj_m, Sun Sep 25 2016 19:10:22 GMT+0200 (CEST)*
+
+---
 ## 0.3.1
 
 * Fix issue with object id

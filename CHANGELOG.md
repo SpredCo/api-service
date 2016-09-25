@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+* Fix issue with object id
+
+*guedj_m, Sun Sep 25 2016 12:16:22 GMT+0200 (CEST)*
+
+---
 ## 0.3.0
 
 * Add route to report user

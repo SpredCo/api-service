@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+* Fix user update (pseudo field)
+
+*guedj_m, Sun Oct 02 2016 17:03:37 GMT+0200 (CEST)*
+
+---
 ## 0.4.0
 
 * Integrate inbox !

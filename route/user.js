@@ -53,6 +53,7 @@ function updateUser (req, res, next) {
         } else {
           var me = req.user;
           me.email = req.body.email || me.email;
+          me.pseudo = req.body.pseudo || me.pseudo;
           me.firstName = req.body.first_name || me.firstName;
           me.lastName = req.body.last_name || me.lastName;
           me.pictureUrl = req.body.picture_url || me.pictureUrl;
@@ -68,6 +69,7 @@ function updateUser (req, res, next) {
     } else {
       var me = req.user;
       me.email = req.body.email || me.email;
+      me.pseudo = req.body.pseudo || me.pseudo;
       me.firstName = req.body.first_name || me.firstName;
       me.lastName = req.body.last_name || me.lastName;
       me.pictureUrl = req.body.picture_url || me.pictureUrl;

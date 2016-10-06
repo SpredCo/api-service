@@ -150,7 +150,7 @@ api:
                   - Invalid request
                   - User not found
           -
-            /v1/users/search/{partial_email}:
+            /v1/users/search/email/{partial_email}:
               get:
                 summary: Search for users by email (partial)
                 tags:
@@ -160,6 +160,18 @@ api:
                     200:
                       description: Search result
                       type: User Array
+          -
+            /v1/users/search/email/{partial_pseudo}:
+              get:
+                summary: Search for users by pseudo (partial)
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Search result
+                      type: User Array
+
     -
       Inbox:
         text: Inbox related routes
@@ -224,6 +236,24 @@ api:
                   - Conversation not found
                   - Message not found
           -
+            /v1/inbox/conversation/{conversationId}/message/{messageId}/read:
+              post:
+                summary: Update read status of the message
+                tags:
+                  - Bearer Auth
+                parameters:
+                  - 
+                    read:
+                      description: Read status
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Read status updated
+                      type: string
+          -
             /v1/inbox/conversation:
               post:
                 summary: Create a new conversation
@@ -238,7 +268,7 @@ api:
                       required: true
                   -
                     members:
-                      description: Conversation members (creator must be in this array)
+                      description: Conversation members ID /!\ ARRAY OF USER ID (creator must be in this array)
                       type: User array
                       in: body
                       required: true
@@ -284,7 +314,7 @@ api:
         message: Cannot reply to this conversation
     -
       Invalid User update:
-        status: 401
+        status: 400
         code: 2
         subcode: 3
         message: Impossible to update email address with an external api login
@@ -354,6 +384,7 @@ api:
       Message:
         description: Message object
         obj:
+          id: ""
           conversation: ""
           from: ""
           content: ""
@@ -364,6 +395,7 @@ api:
         description: Array of message
         obj:
           -
+            id: ""
             conversation: ""
             from: ""
             content: ""
@@ -373,6 +405,7 @@ api:
       Conversation:
         description: Conversation object
         obj:
+          id: ""
           object: ""
           members: "User Array"
           can_answer: ""
@@ -385,6 +418,7 @@ api:
         description: Conversation array
         obj:
           -
+            id: ""
             object: ""
             members: "User Array"
             can_answer: ""

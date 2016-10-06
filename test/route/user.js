@@ -168,7 +168,7 @@ describe('Testing user routes /v1/users/*', function () {
     it('Should update user information', function (done) {
       apiSrv
         .patch('/v1/users/me')
-        .send({ email: fixture.user1n.email, first_name: fixture.user1n.first_name, last_name: fixture.user1n.last_name, picture_url: fixture.user1n.picture_url })
+        .send({ email: fixture.user1n.email, pseudo: fixture.user1n.pseudo, first_name: fixture.user1n.first_name, last_name: fixture.user1n.last_name, picture_url: fixture.user1n.picture_url })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
         .expect(200)
@@ -236,7 +236,7 @@ describe('Testing user routes /v1/users/*', function () {
   describe('Testing user search (GET /v1/users/search/:partial_email', function () {
     it('Should reply research result', function (done) {
       apiSrv
-        .get('/v1/users/search/z')
+        .get('/v1/users/search/email/z')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
         .expect(200)
@@ -252,7 +252,7 @@ describe('Testing user routes /v1/users/*', function () {
 
     it('Should reply research result', function (done) {
       apiSrv
-        .get('/v1/users/search/' + fixture.user1n.email)
+        .get('/v1/users/search/email/' + fixture.user1n.email)
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
         .expect(200)
@@ -268,7 +268,57 @@ describe('Testing user routes /v1/users/*', function () {
 
     it('Should reply research result', function (done) {
       apiSrv
-        .get('/v1/users/search/toto')
+        .get('/v1/users/search/email/toto')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(0);
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing user search by pseudo (GET /v1/users/search/:partial_pseudo', function () {
+    it('Should reply research result', function (done) {
+      apiSrv
+        .get('/v1/users/search/pseudo/z')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(2);
+            done();
+          }
+        });
+    });
+
+    it('Should reply research result', function (done) {
+      apiSrv
+        .get('/v1/users/search/pseudo/' + fixture.user1n.pseudo)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            done();
+          }
+        });
+    });
+
+    it('Should reply research result', function (done) {
+      apiSrv
+        .get('/v1/users/search/pseudo/toto')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
         .expect(200)

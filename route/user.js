@@ -10,7 +10,8 @@ function registerRoute (router) {
   router.post('/users/:id/unfollow', unfollowUser);
   router.post('/users/:id/report', reportUser);
 
-  router.get('/users/search/:email', searchUser);
+  router.get('/users/search/email/:email', searchUserByEmail);
+  router.get('/users/search/pseudo/:pseudo', searchUserByPseudo);
 }
 
 function getUserInfo (req, res, next) {
@@ -18,7 +19,7 @@ function getUserInfo (req, res, next) {
     req.params.id = req.user._id;
   }
   if (req.params.id[0] === '@') {
-    common.userModel.getByPseudo(req.params.id.substring(1), function (err, fUser) {
+    common.userModel.getByPseudo(req.params.id.substring(1), req.params.id === 'me', function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {
@@ -106,8 +107,18 @@ function deleteUser (req, res, next) {
   });
 }
 
-function searchUser (req, res, next) {
+function searchUserByEmail (req, res, next) {
   common.userModel.getByPartialEmail(req.params.email, 10, function (err, fUsers) {
+    if (err) {
+      next(err);
+    } else {
+      httpHelper.sendReply(res, 200, fUsers, next);
+    }
+  });
+}
+
+function searchUserByPseudo (req, res, next) {
+  common.userModel.getByPartialPseudo(req.params.pseudo, 10, function (err, fUsers) {
     if (err) {
       next(err);
     } else {
@@ -127,18 +138,22 @@ function followUser (req, res, next) {
         if (err) {
           next(err);
         } else {
+          var alreadyFollowing = false;
           me.following.forEach(function (elem) {
-            if (elem._id.toString() === req.params.id) {
+            if (elem._id.toString() === req.params.id && !alreadyFollowing) {
               httpHelper.sendReply(res, httpHelper.error.alreadyFollowing());
+              alreadyFollowing = true;
             }
           });
-          me.follow(fUser, function (err) {
-            if (err) {
-              next(err);
-            } else {
-              httpHelper.sendReply(res, 200, { 'result': 'ok' });
-            }
-          });
+          if (!alreadyFollowing) {
+            me.follow(fUser, function (err) {
+              if (err) {
+                next(err);
+              } else {
+                httpHelper.sendReply(res, 200, { 'result': 'ok' });
+              }
+            });
+          }
         }
       });
     }

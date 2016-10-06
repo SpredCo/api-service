@@ -1,5 +1,15 @@
 [
   {
+    "version": "0.5.0",
+    "author": "guedj_m",
+    "date": "Thu Oct 06 2016 15:21:53 GMT+0200 (CEST)",
+    "changes": [
+      "Fix issues",
+      "Add inbox update read route in doc",
+      "Add get by partial pseudo route"
+    ]
+  },
+  {
     "version": "0.4.1",
     "author": "guedj_m",
     "date": "Sun Oct 02 2016 17:03:37 GMT+0200 (CEST)",

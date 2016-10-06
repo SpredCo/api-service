@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+* Fix issues
+* Add inbox update read route in doc
+* Add get by partial pseudo route
+
+*guedj_m, Thu Oct 06 2016 15:21:53 GMT+0200 (CEST)*
+
+---
 ## 0.4.1
 
 * Fix user update (pseudo field)

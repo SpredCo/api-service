@@ -1,5 +1,15 @@
 [
   {
+    "version": "0.5.1",
+    "author": "guedj_m",
+    "date": "Sat Oct 08 2016 15:53:12 GMT+0200 (CEST)",
+    "changes": [
+      "Add route to get number of unread message",
+      "Add route to change read status",
+      "Fix get user information issue"
+    ]
+  },
+  {
     "version": "0.5.0",
     "author": "guedj_m",
     "date": "Thu Oct 06 2016 15:21:53 GMT+0200 (CEST)",

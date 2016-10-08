@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.1
+
+* Add route to get number of unread message
+* Add route to change read status
+* Fix get user information issue
+
+*guedj_m, Sat Oct 08 2016 15:53:12 GMT+0200 (CEST)*
+
+---
 ## 0.5.0
 
 * Fix issues

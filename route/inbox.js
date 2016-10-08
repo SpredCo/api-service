@@ -3,7 +3,7 @@ const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
   router.get('/inbox', getInbox);
-  router.get('/inbox/unread', getUnreadMessageCount); 
+  router.get('/inbox/unread', getUnreadMessageCount);
   router.get('/inbox/conversation/:id', getConversation);
   router.get('/inbox/conversation/:conv_id/message/:id', getMessage);
 
@@ -167,13 +167,13 @@ function readConversation (req, res, next) {
 }
 
 function getUnreadMessageCount (req, res, next) {
- common.messageReadModel.getUnreadCount(req.user, function (err, count) {
-   if (err) {
-     next(err);
-   } else {
-     httpHelper.sendReply(res, 200, { result: count });
-   }
- }); 
+  common.messageReadModel.getUnreadCount(req.user, function (err, count) {
+    if (err) {
+      next(err);
+    } else {
+      httpHelper.sendReply(res, 200, { result: count });
+    }
+  });
 }
 
 module.exports.registerRoute = registerRoute;

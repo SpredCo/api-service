@@ -302,7 +302,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
         });
     });
   });
-  
+
   describe('Testing get conversation (GET /v1/inbox/conversation/:id)', function () {
     it('Should reply an error if id is invalid', function (done) {
       apiSrv
@@ -770,5 +770,4 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
         });
     });
   });
-
 });

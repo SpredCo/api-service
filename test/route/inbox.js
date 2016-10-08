@@ -269,6 +269,40 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
     });
   });
 
+  describe('Testing get unread message count (GET /v1/inbox/unread)', function () {
+    it('Should reply the number of unread message', function (done) {
+      apiSrv
+        .get('/v1/inbox/unread')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.equal(0);
+            done();
+          }
+        });
+    });
+
+    it('Should reply the number of unread message', function (done) {
+      apiSrv
+        .get('/v1/inbox/unread')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token2.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.equal(1);
+            done();
+          }
+        });
+    });
+  });
+  
   describe('Testing get conversation (GET /v1/inbox/conversation/:id)', function () {
     it('Should reply an error if id is invalid', function (done) {
       apiSrv
@@ -647,4 +681,94 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
         });
     });
   });
+
+  describe('Testing read message (POST /v1/inbox/conversation/:id/read)', function () {
+    it('Should reply an error if conversation id is invalid', function (done) {
+      apiSrv
+        .post('/v1/inbox/conversation/ghj/read')
+        .send({ read: true })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(3);
+            expect(res.body.sub_code).to.equal(1);
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if conversation does not exist', function (done) {
+      apiSrv
+        .post('/v1/inbox/conversation/aaaaaaaaaaaa/read')
+        .send({ read: true })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(3);
+            expect(res.body.sub_code).to.equal(1);
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if member is not part of the conversation', function (done) {
+      apiSrv
+        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .send({ read: true })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token3.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(3);
+            expect(res.body.sub_code).to.equal(1);
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if body is incorrect', function (done) {
+      apiSrv
+        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(1);
+            done();
+          }
+        });
+    });
+
+    it('Should update the read state of the message', function (done) {
+      apiSrv
+        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .send({ read: true })
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token2.token)
+        .expect(201)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.equal('ok');
+            done();
+          }
+        });
+    });
+  });
+
 });

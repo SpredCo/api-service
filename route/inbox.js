@@ -3,10 +3,12 @@ const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
   router.get('/inbox', getInbox);
+  router.get('/inbox/unread', getUnreadMessageCount); 
   router.get('/inbox/conversation/:id', getConversation);
   router.get('/inbox/conversation/:conv_id/message/:id', getMessage);
 
   router.post('/inbox/conversation', createNewConversation);
+  router.post('/inbox/conversation/:id/read', readConversation);
   router.post('/inbox/conversation/:id/message', sendNewMessage);
   router.post('/inbox/conversation/:conv_id/message/:id/read', readMessage);
 }
@@ -55,8 +57,8 @@ function getMessage (req, res, next) {
 
 function createNewConversation (req, res, next) {
   if (req.body.object === undefined || req.body.members === undefined || Array.isArray(req.body.members) === false ||
-      req.body.members.length === 0 || req.body.content === undefined || common.utils.arrayHasDuplicate(req.body.members) ||
-      req.body.members.indexOf(req.user._id.toString()) === -1) {
+    req.body.members.length === 0 || req.body.content === undefined || common.utils.arrayHasDuplicate(req.body.members) ||
+    req.body.members.indexOf(req.user._id.toString()) === -1) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.userModel.usersExist(req.body.members, function (err, result) {
@@ -140,6 +142,38 @@ function readMessage (req, res, next) {
       }
     });
   }
+}
+
+function readConversation (req, res, next) {
+  if (req.body.read === undefined && typeof (req.body.read) !== 'boolean') {
+    httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
+  } else {
+    common.conversationModel.getByIdAndUser(req.params.id, req.user, function (err, fConversation) {
+      if (err) {
+        next(err);
+      } else if (fConversation == null) {
+        httpHelper.sendReply(res, httpHelper.error.conversationNotFound());
+      } else {
+        common.messageReadModel.updateReadConversation(req.user, req.params.id, req.body.read, function (err) {
+          if (err) {
+            next(err);
+          } else {
+            httpHelper.sendReply(res, 201, { result: 'ok' });
+          }
+        });
+      }
+    });
+  }
+}
+
+function getUnreadMessageCount (req, res, next) {
+ common.messageReadModel.getUnreadCount(req.user, function (err, count) {
+   if (err) {
+     next(err);
+   } else {
+     httpHelper.sendReply(res, 200, { result: count });
+   }
+ }); 
 }
 
 module.exports.registerRoute = registerRoute;

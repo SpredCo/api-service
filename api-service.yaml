@@ -188,6 +188,17 @@ api:
                       description: User inbox
                       type: Conversation Array
           -
+            /v1/inbox/unread:
+              get:
+                summary: Get number of unread message
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Number of unread message: {result: 5}
+                      type: int
+          -
             /v1/inbox/conversation/{id}:
               get:
                 summary: Get a conversation
@@ -220,7 +231,22 @@ api:
                   - Invalid request
                   - Conversation not found
                   - Cannot reply
-
+          -
+            /v1/inbox/conversation/{conversationId}/read:
+              post:
+                summary: Update the read of all message in a conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    read:
+                      description: New read value
+                      in: body
+                      type: string
+                      required: true
+                errors:
+                  - Invalid request
+                  - Conversation not found
           -
             /v1/inbox/conversation/{conversationId}/message/{messageId}:
               get:

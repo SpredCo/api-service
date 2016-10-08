@@ -19,7 +19,7 @@ function getUserInfo (req, res, next) {
     req.params.id = req.user._id;
   }
   if (req.params.id[0] === '@') {
-    common.userModel.getByPseudo(req.params.id.substring(1), req.params.id === 'me', function (err, fUser) {
+    common.userModel.getByPseudo(req.params.id.substring(1), false, function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {
@@ -29,7 +29,7 @@ function getUserInfo (req, res, next) {
       }
     });
   } else {
-    common.userModel.getById(req.params.id, req.params.id === 'me', function (err, fUser) {
+    common.userModel.getById(req.params.id, req.params.id === req.user._id, function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {

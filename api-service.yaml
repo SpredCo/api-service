@@ -211,6 +211,8 @@ api:
                       type: Conversation
                 errors:
                   - Conversation not found
+          -
+            /v1/inbox/conversation/{id}/message:
               post:
                 summary: Reply to the conversation
                 tags:

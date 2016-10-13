@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.2
+
+* Fix documentation
+
+*guedj_m, Thu Oct 13 2016 20:06:21 GMT+0200 (CEST)*
+
+---
 ## 0.5.1
 
 * Add route to get number of unread message

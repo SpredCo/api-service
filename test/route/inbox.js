@@ -72,7 +72,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
   it('Get current empty inbox (GET /v1/inbox)', function (done) {
     apiSrv
-      .get('/v1/inbox')
+      .get('/v1/inbox/conversation')
       .set('Content-Type', 'application/json')
       .set('Authorization', 'Bearer ' + token1.token)
       .expect(200)
@@ -200,10 +200,10 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
     });
   });
 
-  describe('Testing get inbox (GET /v1/inbox', function () {
+  describe('Testing get inbox (GET /v1/inbox)', function () {
     it('Get current user1 inbox', function (done) {
       apiSrv
-        .get('/v1/inbox')
+        .get('/v1/inbox/conversation')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(200)
@@ -215,13 +215,8 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
             expect(res.body).to.have.lengthOf(1);
             expect(res.body[0].object).to.equal(fixture.object);
             expect(res.body[0].members).to.have.lengthOf(2);
-            expect(res.body[0].msg).to.be.an.array;
-            expect(res.body[0].msg).to.have.lengthOf(1);
-            expect(res.body[0].msg[0].from).to.equal(user1._id.toString());
-            expect(res.body[0].msg[0].content).to.equal(fixture.content1);
-            expect(res.body[0].msg[0].read).to.be.true;
+            expect(res.body[0].read).to.be.true;
             conv = res.body[0];
-            msg = res.body[0].msg[0];
             done();
           }
         });
@@ -229,7 +224,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Get current user2 inbox', function (done) {
       apiSrv
-        .get('/v1/inbox')
+        .get('/v1/inbox/conversation')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token2.token)
         .expect(200)
@@ -241,11 +236,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
             expect(res.body).to.have.lengthOf(1);
             expect(res.body[0].object).to.equal(fixture.object);
             expect(res.body[0].members).to.have.lengthOf(2);
-            expect(res.body[0].msg).to.be.an.array;
-            expect(res.body[0].msg).to.have.lengthOf(1);
-            expect(res.body[0].msg[0].from).to.equal(user1._id.toString());
-            expect(res.body[0].msg[0].content).to.equal(fixture.content1);
-            expect(res.body[0].msg[0].read).to.be.false;
+            expect(res.body[0].read).to.be.false;
             done();
           }
         });
@@ -253,7 +244,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Get current user3 inbox', function (done) {
       apiSrv
-        .get('/v1/inbox')
+        .get('/v1/inbox/conversation')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
         .expect(200)
@@ -372,6 +363,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
             expect(res.body.msg[0].from).to.equal(user1._id.toString());
             expect(res.body.msg[0].content).to.equal(fixture.content1);
             expect(res.body.msg[0].read).to.be.true;
+            msg = res.body.msg[0];
             done();
           }
         });

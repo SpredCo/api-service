@@ -177,16 +177,16 @@ api:
         text: Inbox related routes
         url:
           -
-            /v1/inbox:
+            /v1/inbox/conversation:
               get:
-                summary: Get user inbox
+                summary: Get user converstion
                 tags:
                   - Bearer Auth
                 responses:
                   -
                     200:
                       description: User inbox
-                      type: Conversation Array
+                      type: Simple conversation Array
           -
             /v1/inbox/unread:
               get:
@@ -442,8 +442,19 @@ api:
           msg:
             - "Message Array"
     -
-      Conversation Array:
-        description: Conversation array
+      Simple conversation:
+        description: Simple conversation object (does not contain message)
+        obj:
+          id: ""
+          object: ""
+          members: "User Array"
+          can_answer: ""
+          last_msg: ""
+          created_at: ""
+          read: ""
+    -
+      Simple conversation array:
+        description: Simple conversation array object (does not contain message)
         obj:
           -
             id: ""
@@ -452,5 +463,4 @@ api:
             can_answer: ""
             last_msg: ""
             created_at: ""
-            msg:
-              - "Message Array"
+            read: ""

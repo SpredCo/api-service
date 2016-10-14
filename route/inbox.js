@@ -2,7 +2,7 @@ const common = require('spred-common');
 const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
-  router.get('/inbox', getInbox);
+  router.get('/inbox/conversation', getConversations);
   router.get('/inbox/unread', getUnreadMessageCount);
   router.get('/inbox/conversation/:id', getConversation);
   router.get('/inbox/conversation/:conv_id/message/:id', getMessage);
@@ -13,8 +13,8 @@ function registerRoute (router) {
   router.post('/inbox/conversation/:conv_id/message/:id/read', readMessage);
 }
 
-function getInbox (req, res, next) {
-  common.conversationModel.getByUser(req.user, function (err, fConversations) {
+function getConversations (req, res, next) {
+  common.conversationModel.getUserConversations(req.user, function (err, fConversations) {
     if (err) {
       next(err);
     } else {

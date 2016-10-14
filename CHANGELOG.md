@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.3
+
+* Delete GET /v1/inbox route
+* Add Get /v1/inbox/conversation route to get a list of user conversation
+* Fix conversation order
+* Fix message order
+* Fix update conversation read
+* Fix reply message
+
+*guedj_m, Fri Oct 14 2016 12:48:18 GMT+0200 (CEST)*
+
+---
 ## 0.5.2
 
 * Fix documentation

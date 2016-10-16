@@ -552,7 +552,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
   describe('Testing read message (POST /v1/inbox/conversation/:id/message/:id/read)', function () {
     it('Should reply an error if conversation id is invalid', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/ghj/message/' + msg.id + '/read')
+        .patch('/v1/inbox/conversation/ghj/message/' + msg.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -570,7 +570,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if conversation does not exist', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/aaaaaaaaaaaa/message/' + msg.id + '/read')
+        .patch('/v1/inbox/conversation/aaaaaaaaaaaa/message/' + msg.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -588,7 +588,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if member is not part of the conversation', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
@@ -606,7 +606,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if message id is not valid', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/message/azfez/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/message/azfez/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -624,7 +624,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if message does not exist', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/message/aaaaaaaaaaaa/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/message/aaaaaaaaaaaa/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -642,7 +642,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if body is incorrect', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(400)
@@ -658,7 +658,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should update the read state of the message', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/message/' + msg.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token2.token)
@@ -677,7 +677,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
   describe('Testing read message (POST /v1/inbox/conversation/:id/read)', function () {
     it('Should reply an error if conversation id is invalid', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/ghj/read')
+        .patch('/v1/inbox/conversation/ghj/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -695,7 +695,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if conversation does not exist', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/aaaaaaaaaaaa/read')
+        .patch('/v1/inbox/conversation/aaaaaaaaaaaa/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -713,7 +713,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if member is not part of the conversation', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
@@ -731,7 +731,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should reply an error if body is incorrect', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/read')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(400)
@@ -747,7 +747,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
 
     it('Should update the read state of the message', function (done) {
       apiSrv
-        .post('/v1/inbox/conversation/' + conv.id + '/read')
+        .patch('/v1/inbox/conversation/' + conv.id + '/read')
         .send({ read: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token2.token)

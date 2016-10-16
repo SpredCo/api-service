@@ -8,9 +8,9 @@ function registerRoute (router) {
   router.get('/inbox/conversation/:conv_id/message/:id', getMessage);
 
   router.post('/inbox/conversation', createNewConversation);
-  router.post('/inbox/conversation/:id/read', readConversation);
+  router.patch('/inbox/conversation/:id/read', readConversation);
   router.post('/inbox/conversation/:id/message', sendNewMessage);
-  router.post('/inbox/conversation/:conv_id/message/:id/read', readMessage);
+  router.patch('/inbox/conversation/:conv_id/message/:id/read', readMessage);
 }
 
 function getConversations (req, res, next) {

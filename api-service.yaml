@@ -235,7 +235,7 @@ api:
                   - Cannot reply
           -
             /v1/inbox/conversation/{conversationId}/read:
-              post:
+              patch:
                 summary: Update the read of all message in a conversation
                 tags:
                   - Bearer Auth
@@ -265,7 +265,7 @@ api:
                   - Message not found
           -
             /v1/inbox/conversation/{conversationId}/message/{messageId}/read:
-              post:
+              patch:
                 summary: Update read status of the message
                 tags:
                   - Bearer Auth

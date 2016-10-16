@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.4
+
+* Update read is now PATCH http method
+
+*guedj_m, Sun Oct 16 2016 21:06:31 GMT+0200 (CEST)*
+
+---
 ## 0.5.3
 
 * Delete GET /v1/inbox route

@@ -7,9 +7,7 @@ const common = require('spred-common');
 const url = config.get('test.server.url') + ':' + config.get('test.server.port');
 const apiSrv = supertest(url);
 
-var user1;
 var user2;
-var user3;
 var token1;
 var token2;
 var token3;
@@ -47,9 +45,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
                               if (err) {
                                 done(err);
                               } else {
-                                user1 = cUser1;
                                 user2 = cUser2;
-                                user3 = cUser3;
                                 token1 = cToken1;
                                 token2 = cToken2;
                                 token3 = cToken3;
@@ -74,7 +70,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a public spredcast', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast1.name, description: fixture.cast1.description, is_public: fixture.cast1.is_public, date: fixture.cast1.date, tags: fixture.cast1.tags, user_capacity: fixture.cast1.user_capacity})
+        .send({ name: fixture.cast1.name, description: fixture.cast1.description, is_public: fixture.cast1.is_public, date: fixture.cast1.date, tags: fixture.cast1.tags, user_capacity: fixture.cast1.user_capacity })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -97,7 +93,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a private spredcast', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast2.name, description: fixture.cast2.description, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ]})
+        .send({ name: fixture.cast2.name, description: fixture.cast2.description, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ] })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -120,7 +116,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should return an error if parameter are missing', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ]})
+        .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ] })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(400)
@@ -136,7 +132,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should return an error if private cast without members', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [  ]})
+        .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [] })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(400)
@@ -149,7 +145,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
         });
     });
   });
-  
+
   describe('Testing cast token creation (POST /v1/spredcast/{id}/token) ', function () {
     it('Should create a cast token for the presenter', function (done) {
       apiSrv
@@ -242,7 +238,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
           }
         });
     });
-    
+
     it('Should refuse access to a private cast', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast2.id + '/token')

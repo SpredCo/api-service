@@ -1,14 +1,14 @@
 const common = require('spred-common');
 const httpHelper = require('spred-http-helper');
 
-function registerRoute(router) {
+function registerRoute (router) {
   router.post('/spredcast', createCast);
-  router.post('/spredcast/:id/token', createCastToken)
+  router.post('/spredcast/:id/token', createCastToken);
 }
 
-function createCast(req, res, next) {
-  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined 
-    || (req.body.is_public === false && (req.body.members == undefined || !Array.isArray(req.body.members) || req.body.members.length == 0))) {
+function createCast (req, res, next) {
+  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined ||
+    (req.body.is_public === false && (req.body.members === undefined || !Array.isArray(req.body.members) || req.body.members.length === 0))) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.spredCastModel.createNew(req.user._id, req.body.name, req.body.description, req.body.tags, req.body.date, req.body.is_public,
@@ -33,8 +33,8 @@ function createCast(req, res, next) {
   }
 }
 
-function createCastToken(req, res, next) {
-  if (req.body.presenter === undefined || typeof(req.body.presenter) !== 'boolean') {
+function createCastToken (req, res, next) {
+  if (req.body.presenter === undefined || typeof (req.body.presenter) !== 'boolean') {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.spredCastModel.userCanJoin(req.params.id, req.user._id, function (err, authorization, fCast) {

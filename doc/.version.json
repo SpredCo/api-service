@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.6.0",
+    "author": "guedj_m",
+    "date": "Fri Nov 04 2016 17:15:56 GMT+0100 (CET)",
+    "changes": [
+      "Integrate spred cast managment"
+    ]
+  },
+  {
     "version": "0.5.4",
     "author": "guedj_m",
     "date": "Sun Oct 16 2016 21:06:31 GMT+0200 (CEST)",

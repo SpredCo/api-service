@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0
+
+* Integrate spred cast managment
+
+*guedj_m, Fri Nov 04 2016 17:15:56 GMT+0100 (CET)*
+
+---
 ## 0.5.4
 
 * Update read is now PATCH http method

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.1
+
+* Fix issue when user can get presenter right without being the creator of the cast
+
+*guedj_m, Fri Nov 04 2016 18:10:18 GMT+0100 (CET)*
+
+---
 ## 0.6.0
 
 * Integrate spred cast managment

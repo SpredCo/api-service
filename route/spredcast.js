@@ -37,7 +37,7 @@ function createCastToken (req, res, next) {
   if (req.body.presenter === undefined || typeof (req.body.presenter) !== 'boolean') {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
-    common.spredCastModel.userCanJoin(req.params.id, req.user._id, function (err, authorization, fCast) {
+    common.spredCastModel.userCanJoin(req.params.id, req.user._id, req.body.presenter, function (err, authorization, fCast) {
       if (err) {
         next(err);
       } else if (!authorization && fCast === null) {

@@ -314,6 +314,94 @@ api:
                 errors:
                   - Invalid request
                   - User not found
+    -
+      Spredcast:
+        text: SpredCast related routes
+        url:
+          -
+            /v1/spredcast:
+              post:
+                summary: Create a new SpredCast
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    name:
+                      description: The name of the cast
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    description:
+                      description: The description of the cast
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    is_public:
+                      description: Public cast (boolean type)
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    date:
+                      description: Date of the cast (must be a js formated date). Can be the string 'now'.
+                      required: true
+                      in: body
+                      type: string
+                  -
+                    tags:
+                      description: Tags of the cast (Array of string)
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    user_capacity:
+                      description: Max number of user in the cast (int)
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    members:
+                      description: Members allowed to join the cast (as user id array). Required only for private cast
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    duration:
+                      description: Estimated duration of the cast (int value)
+                      required: false
+                      in: body
+                      type: string
+                responses:
+                  -
+                    201:
+                      description: Cast created
+                      type: Spredcast
+                errors:
+                  - Invalid request
+          -
+            /v1/spredcast/{id}/token:
+              post:
+                summary: Get a cast token for the cast
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    presenter:
+                      description: Presenter mode (as boolean)
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Token created
+                      type: Cast token
+                errors:
+                  - Invalid request
+                  - Cast not found
+                  - Authorization refused
 
   errors:
     -
@@ -354,12 +442,24 @@ api:
         subcode: 1
         message: User exists (email address already in use)
     -
+      Authorization refused:
+        status: 403
+        code: 5
+        subcode: 1
+        message: Authorization refused
+    -
       User not found:
         status: 404
         code: 2
         subcode: 1
         message: Unable to find user
         fix: Check user publicId twice
+    -
+      Cast not found:
+        status: 404
+        code: 5
+        subcode: 1
+        message: Unable to find cast
     -
       Conversation not found:
         status: 404
@@ -463,4 +563,27 @@ api:
             can_answer: ""
             last_msg: ""
             created_at: ""
-            read: ""
+            read: "" 
+    -
+      Spredcast:
+        description: Spredcast object
+        obj:
+          -
+            id: ""
+            name: ""
+            description: ""
+            tags: [ "" ]
+            date: ""
+            is_public: true
+            user_capacity: 10
+            members: [ "user id" ]
+            duration: 10
+    -
+      Cast token:
+        description: Cast token object
+        obj:
+          -
+            cast_token: ""
+            spredcast: "id"
+            presenter: true
+            pseudo: ""

@@ -1,0 +1,46 @@
+{
+  "client": {
+    "name": "ClientCast",
+    "key": "Cast",
+    "secret": "secret"
+  },
+  "user1": {
+    "email": "user1@sprecast.com",
+    "password": "password",
+    "pseudo": "user1Cast",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "user2": {
+    "email": "user2@sprecast.com",
+    "password": "password",
+    "pseudo": "user2Cast",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "user3": {
+    "email": "user3@sprecast.com",
+    "password": "password",
+    "pseudo": "user3Cast",
+    "first_name": "Maxime",
+    "last_name": "Guedj"
+  },
+  "cast1": {
+    "name": "Cast1",
+    "description": "Cast1",
+    "is_public": true,
+    "user_capacity": 10,
+    "date": "now",
+    "tags": ["ruby", "null"]
+  },
+  "cast2": {
+    "name": "Cast2",
+    "description": "Cast2",
+    "is_public": false,
+    "user_capacity": 10,
+    "date": "now"
+  },
+  "token1": "casttoken1",
+  "token2": "casttoken2",
+  "token3": "casttoken3"
+}

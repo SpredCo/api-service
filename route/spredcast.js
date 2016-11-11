@@ -25,7 +25,8 @@ function createCast (req, res, next) {
             is_public: cCast.isPublic,
             user_capacity: cCast.userCapacity,
             members: cCast.members,
-            duration: cCast.duration
+            duration: cCast.duration,
+            url: req.body.name.replace(' ', '-') + common.utils.uidGen(3)
           };
           httpHelper.sendReply(res, 201, rep);
         }

@@ -12,7 +12,7 @@ function createCast (req, res, next) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
     common.spredCastModel.createNew(req.user._id, req.body.name, req.body.description, req.body.tags, req.body.date, req.body.is_public,
-      req.body.user_capacity, req.body.members, req.body.duration, function (err, cCast) {
+      req.body.user_capacity, req.body.members, req.body.duration, req.body.name.replace(' ', '-') + common.utils.uidGen(3), function (err, cCast) {
         if (err) {
           next(err);
         } else {
@@ -26,7 +26,7 @@ function createCast (req, res, next) {
             user_capacity: cCast.userCapacity,
             members: cCast.members,
             duration: cCast.duration,
-            url: req.body.name.replace(' ', '-') + common.utils.uidGen(3)
+            url: cCast.url
           };
           httpHelper.sendReply(res, 201, rep);
         }

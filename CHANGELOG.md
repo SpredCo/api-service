@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.2
+
+* Add the url genration
+
+*guedjm, Fri Nov 11 2016 14:34:39 GMT+0100 (CET)*
+
+---
 ## 0.6.1
 
 * Fix issue when user can get presenter right without being the creator of the cast

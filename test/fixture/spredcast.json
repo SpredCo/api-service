@@ -31,14 +31,16 @@
     "is_public": true,
     "user_capacity": 10,
     "date": "now",
-    "tags": ["ruby", "null"]
+    "tags": ["ruby", "null"],
+    "cover_url": "http://google.fr"
   },
   "cast2": {
     "name": "Cast2",
     "description": "Cast2",
     "is_public": false,
     "user_capacity": 10,
-    "date": "now"
+    "date": "now",
+    "cover_url": "http://google.fr2"
   },
   "token1": "casttoken1",
   "token2": "casttoken2",

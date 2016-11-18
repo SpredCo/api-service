@@ -2,7 +2,7 @@ dbConfig:
   host: localhost
   port: 27017
   dbName: spred
-
+  
 test:
   dbConfig:
     dbName: spred-api-test

@@ -35,6 +35,7 @@ function getApp (log) {
 
   apiApp.use('/v1', apiRouter);
   apiApp.use('/doc', express.static(path.join(__dirname, '/doc'), {dotfiles: 'allow'}));
+  apiApp.use('/upload', express.static(path.join(__dirname, '/upload'), {dotfiles: 'allow'}));
 
   // Error handler
   apiApp.use(function (err, req, res, next) {
@@ -47,5 +48,4 @@ function getApp (log) {
 
   return apiApp;
 }
-
 module.exports.getApp = getApp;

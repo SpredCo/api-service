@@ -373,6 +373,12 @@ api:
                       required: false
                       in: body
                       type: string
+                  -
+                    cover_url:
+                      description: Url of the cover photo
+                      required: false
+                      in: body
+                      type: string
                 responses:
                   -
                     201:
@@ -589,6 +595,8 @@ api:
             user_capacity: 10
             members: [ "user_id" ]
             duration: 10
+            url: ""
+            cover_url: ""
     -
       Spredcast:
         description: Spredcast object
@@ -603,6 +611,8 @@ api:
             user_capacity: 10
             members: [ "user_id" ]
             duration: 10
+            url: ""
+            cover_url: ""
     -
       Spredcast array:
         description: Spredcast object
@@ -618,6 +628,8 @@ api:
               user_capacity: 10
               members: [ "user" ]
               duration: 10
+              url: ""
+              cover_url: ""
     -
       Cast token:
         description: Cast token object

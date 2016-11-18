@@ -18,7 +18,7 @@ function getUserCast (req, res, next) {
 }
 
 function createCast (req, res, next) {
-  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined || req.body.cover_url === undefined ||
+  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined ||
     (req.body.is_public === false && (req.body.members === undefined || !Array.isArray(req.body.members) || req.body.members.length === 0))) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1
+
+* Update documentation
+
+*guedj_m, Fri Nov 18 2016 12:08:54 GMT+0100 (CET)*
+
+---
 ## 0.7.0
 
 * Integrate route to get user spredcast

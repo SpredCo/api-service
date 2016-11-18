@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+* Integrate route to get user spredcast
+* Code clean
+
+*guedj_m, Fri Nov 18 2016 11:38:51 GMT+0100 (CET)*
+
+---
 ## 0.6.2
 
 * Add the url genration

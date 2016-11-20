@@ -168,7 +168,6 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a cast token for the presenter', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast1.id + '/token')
-        .send({ presenter: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -194,7 +193,6 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a cast token for the spectator', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast1.id + '/token')
-        .send({ presenter: false })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
         .expect(201)
@@ -214,7 +212,6 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a cast token for the presenter', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast2.id + '/token')
-        .send({ presenter: true })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -240,7 +237,6 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a cast token for a member invited to a private cast', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast2.id + '/token')
-        .send({ presenter: false })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token2.token)
         .expect(201)
@@ -260,26 +256,9 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should refuse access to a private cast', function (done) {
       apiSrv
         .post('/v1/spredcast/' + cast2.id + '/token')
-        .send({ presenter: false })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
         .expect(403)
-        .end(function (err, res) {
-          if (err) {
-            done(err);
-          } else {
-            done();
-          }
-        });
-    });
-
-    it('Should reply an error if body is empty', function (done) {
-      apiSrv
-        .post('/v1/spredcast/' + cast1.id + '/token')
-        .send()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + token3.token)
-        .expect(400)
         .end(function (err, res) {
           if (err) {
             done(err);

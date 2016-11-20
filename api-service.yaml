@@ -392,20 +392,12 @@ api:
                 summary: Get a cast token for the cast
                 tags:
                   - Bearer Auth
-                parameters:
-                  -
-                    presenter:
-                      description: Presenter mode (as boolean)
-                      type: string
-                      in: body
-                      required: true
                 responses:
                   -
                     201:
                       description: Token created
                       type: Cast token
                 errors:
-                  - Invalid request
                   - Cast not found
                   - Authorization refused
           -

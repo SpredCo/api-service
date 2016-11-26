@@ -383,7 +383,7 @@ api:
                   -
                     201:
                       description: Cast created
-                      type: Spredcast created
+                      type: Spredcast
                 errors:
                   - Invalid request
           -
@@ -572,23 +572,7 @@ api:
             can_answer: ""
             last_msg: ""
             created_at: ""
-            read: "" 
-    -
-      Spredcast created:
-        description: Spredcast object
-        obj:
-          -
-            id: ""
-            name: ""
-            description: ""
-            tags: [ "" ]
-            date: ""
-            is_public: true
-            user_capacity: 10
-            members: [ "user_id" ]
-            duration: 10
-            url: ""
-            cover_url: ""
+            read: ""
     -
       Spredcast:
         description: Spredcast object

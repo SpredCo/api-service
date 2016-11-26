@@ -27,7 +27,13 @@ function createCast (req, res, next) {
         if (err) {
           next(err);
         } else {
-          httpHelper.sendReply(res, 201, cCast);
+          common.spredCastModel.getByUrl(cCast.url, function (err, fCast) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 201, fCast);
+            }
+          });
         }
       });
   }

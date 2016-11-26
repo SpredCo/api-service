@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.3
+
+* Update create state reply 
+
+*guedjm, Sat Nov 26 2016 14:58:38 GMT+0100 (CET)*
+
+---
 ## 0.7.2
 
 * presenter parameter is no longer required to get a cast token

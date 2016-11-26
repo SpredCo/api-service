@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.7.3",
+    "author": "guedjm",
+    "date": "Sat Nov 26 2016 14:58:38 GMT+0100 (CET)",
+    "changes": [
+      "Update create state reply "
+    ]
+  },
+  {
     "version": "0.7.2",
     "author": "guedjm",
     "date": "Sun Nov 20 2016 14:08:19 GMT+0100 (CET)",

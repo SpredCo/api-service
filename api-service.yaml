@@ -577,41 +577,53 @@ api:
       Spredcast:
         description: Spredcast object
         obj:
+          id: ""
+          name: ""
+          description: ""
+          tags: [ "Tag object" ]
+          date: ""
+          is_public: true
+          user_capacity: 10
+          members: [ "user_id" ]
+          duration: 10
+          url: ""
+          cover_url: ""
+    -
+      Spredcast array:
+        description: Spredcast array object
+        obj:
           -
             id: ""
             name: ""
             description: ""
-            tags: [ "" ]
+            tags: [ "Tag Object" ]
             date: ""
             is_public: true
             user_capacity: 10
-            members: [ "user_id" ]
+            members: [ "user" ]
             duration: 10
             url: ""
             cover_url: ""
     -
-      Spredcast array:
-        description: Spredcast object
-        obj:
-          -
-            -
-              id: ""
-              name: ""
-              description: ""
-              tags: [ "" ]
-              date: ""
-              is_public: true
-              user_capacity: 10
-              members: [ "user" ]
-              duration: 10
-              url: ""
-              cover_url: ""
-    -
       Cast token:
         description: Cast token object
         obj:
+          cast_token: ""
+          spredcast: "id"
+          presenter: true
+          pseudo: ""
+    -
+      Tag:
+        description: Tag Object
+        obj:
+          name: ""
+          description: ""
+          id: ""
+    -
+      Tag array:
+        description: Tag array
+        obj:
           -
-            cast_token: ""
-            spredcast: "id"
-            presenter: true
-            pseudo: ""
+            name: ""
+            description: ""
+            id: ""

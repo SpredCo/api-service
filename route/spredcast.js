@@ -18,24 +18,33 @@ function getUserCast (req, res, next) {
 }
 
 function createCast (req, res, next) {
-  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined ||
+  if (req.body.name === undefined || req.body.description === undefined || req.body.is_public === undefined || req.body.date === undefined || req.body.tags === undefined || !Array.isArray(req.body.tags) ||
     (req.body.is_public === false && (req.body.members === undefined || !Array.isArray(req.body.members) || req.body.members.length === 0))) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
-    common.spredCastModel.createNew(req.user._id, req.body.name, req.body.description, req.body.tags, req.body.date, req.body.is_public,
-      req.body.user_capacity, req.body.members, req.body.duration, req.body.name.replace(' ', '-') + common.utils.uidGen(3), req.body.cover_url, function (err, cCast) {
-        if (err) {
-          next(err);
-        } else {
-          common.spredCastModel.getByUrl(cCast.url, function (err, fCast) {
+    common.tagModel.checkExist(req.body.tags, function (err, result) {
+      if (err) {
+        next(err);
+      } else if (result === false) {
+        httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
+      } else {
+        const url = req.body.name.split(' ').join('-') + '-' + common.utils.uidGen(3);
+        common.spredCastModel.createNew(req.user._id, req.body.name, req.body.description, req.body.tags, req.body.date, req.body.is_public,
+          req.body.user_capacity, req.body.members, req.body.duration, url, req.body.cover_url, function (err, cCast) {
             if (err) {
               next(err);
             } else {
-              httpHelper.sendReply(res, 201, fCast);
+              common.spredCastModel.getByUrl(cCast.url, function (err, fCast) {
+                if (err) {
+                  next(err);
+                } else {
+                  httpHelper.sendReply(res, 201, fCast);
+                }
+              });
             }
           });
-        }
-      });
+      }
+    });
   }
 }
 

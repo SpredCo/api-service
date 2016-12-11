@@ -11,6 +11,8 @@ var user2;
 var token1;
 var token2;
 var token3;
+var tag1;
+var tag2;
 var cast1;
 var cast2;
 
@@ -45,11 +47,25 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
                               if (err) {
                                 done(err);
                               } else {
-                                user2 = cUser2;
-                                token1 = cToken1;
-                                token2 = cToken2;
-                                token3 = cToken3;
-                                done();
+                                common.tagModel.createNew(fixture.tag1.name, fixture.tag1.description, function (err, cTag) {
+                                  if (err) {
+                                    done(err);
+                                  } else {
+                                    common.tagModel.createNew(fixture.tag2.name, fixture.tag2.description, function (err, cTag2) {
+                                      if (err) {
+                                        done(err);
+                                      } else {
+                                        user2 = cUser2;
+                                        token1 = cToken1;
+                                        token2 = cToken2;
+                                        token3 = cToken3;
+                                        tag1 = cTag;
+                                        tag2 = cTag2;
+                                        done();
+                                      }
+                                    });
+                                  }
+                                });
                               }
                             });
                           }
@@ -70,7 +86,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a public spredcast', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast1.name, description: fixture.cast1.description, is_public: fixture.cast1.is_public, date: fixture.cast1.date, tags: fixture.cast1.tags, user_capacity: fixture.cast1.user_capacity, cover_url: fixture.cast1.cover_url })
+        .send({ name: fixture.cast1.name, description: fixture.cast1.description, is_public: fixture.cast1.is_public, date: fixture.cast1.date, tags: [tag1._id, tag2._id], user_capacity: fixture.cast1.user_capacity, cover_url: fixture.cast1.cover_url })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -93,7 +109,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     it('Should create a private spredcast', function (done) {
       apiSrv
         .post('/v1/spredcast')
-        .send({ name: fixture.cast2.name, description: fixture.cast2.description, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ], cover_url: fixture.cast2.cover_url })
+        .send({ name: fixture.cast2.name, description: fixture.cast2.description, is_public: fixture.cast2.is_public, date: new Date(), tags: [tag1._id, tag2._id], user_capacity: fixture.cast1.user_capacity, members: [ user2._id ], cover_url: fixture.cast2.cover_url })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -103,7 +119,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
           } else {
             expect(res.body.name).to.equal(fixture.cast2.name);
             expect(res.body.description).to.equal(fixture.cast2.description);
-            expect(res.body.tags).to.have.lengthOf(0);
+            expect(res.body.tags).to.have.lengthOf(2);
             expect(res.body.is_public).to.equal(fixture.cast2.is_public);
             expect(res.body.user_capacity).to.equal(fixture.cast2.user_capacity);
             expect(res.body.members).to.have.lengthOf(1);

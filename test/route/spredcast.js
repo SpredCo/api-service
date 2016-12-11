@@ -82,10 +82,10 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     });
   });
 
-  describe('Testing spredcast creation (POST /v1/spredcast)', function () {
+  describe('Testing spredcast creation (POST /v1/spredcasts)', function () {
     it('Should create a public spredcast', function (done) {
       apiSrv
-        .post('/v1/spredcast')
+        .post('/v1/spredcasts')
         .send({ name: fixture.cast1.name, description: fixture.cast1.description, is_public: fixture.cast1.is_public, date: fixture.cast1.date, tags: [tag1._id, tag2._id], user_capacity: fixture.cast1.user_capacity, cover_url: fixture.cast1.cover_url })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -108,7 +108,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should create a private spredcast', function (done) {
       apiSrv
-        .post('/v1/spredcast')
+        .post('/v1/spredcasts')
         .send({ name: fixture.cast2.name, description: fixture.cast2.description, is_public: fixture.cast2.is_public, date: new Date(), tags: [tag1._id, tag2._id], user_capacity: fixture.cast1.user_capacity, members: [ user2._id ], cover_url: fixture.cast2.cover_url })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -131,7 +131,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should return an error if parameter are missing', function (done) {
       apiSrv
-        .post('/v1/spredcast')
+        .post('/v1/spredcasts')
         .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [ user2._id ] })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -147,7 +147,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should return an error if private cast without members', function (done) {
       apiSrv
-        .post('/v1/spredcast')
+        .post('/v1/spredcasts')
         .send({ name: fixture.cast2.name, is_public: fixture.cast2.is_public, date: new Date(), user_capacity: fixture.cast1.user_capacity, members: [] })
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
@@ -165,7 +165,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
   describe('Testing get cast by User (GET /v1/spredcast)', function () {
     it('Should return the users spredcasrs', function (done) {
       apiSrv
-        .get('/v1/spredcast')
+        .get('/v1/spredcasts')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(200)
@@ -183,7 +183,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
   describe('Testing cast token creation (POST /v1/spredcast/{id}/token) ', function () {
     it('Should create a cast token for the presenter', function (done) {
       apiSrv
-        .post('/v1/spredcast/' + cast1.id + '/token')
+        .post('/v1/spredcasts/' + cast1.id + '/token')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -208,7 +208,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should create a cast token for the spectator', function (done) {
       apiSrv
-        .post('/v1/spredcast/' + cast1.id + '/token')
+        .post('/v1/spredcasts/' + cast1.id + '/token')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
         .expect(201)
@@ -227,7 +227,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should create a cast token for the presenter', function (done) {
       apiSrv
-        .post('/v1/spredcast/' + cast2.id + '/token')
+        .post('/v1/spredcasts/' + cast2.id + '/token')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token1.token)
         .expect(201)
@@ -252,7 +252,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should create a cast token for a member invited to a private cast', function (done) {
       apiSrv
-        .post('/v1/spredcast/' + cast2.id + '/token')
+        .post('/v1/spredcasts/' + cast2.id + '/token')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token2.token)
         .expect(201)
@@ -271,7 +271,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
 
     it('Should refuse access to a private cast', function (done) {
       apiSrv
-        .post('/v1/spredcast/' + cast2.id + '/token')
+        .post('/v1/spredcasts/' + cast2.id + '/token')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + token3.token)
         .expect(403)

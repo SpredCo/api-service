@@ -13,7 +13,7 @@ const userRouter = require('./route/user');
 const inboxRouter = require('./route/inbox');
 const spredCastRouter = require('./route/spredcast');
 
-function getApp (log) {
+function getApp (log, indexFunc) {
   logger.info('Initializing api app ...');
   apiApp = express();
   apiApp.use(bodyParser.json());
@@ -31,7 +31,7 @@ function getApp (log) {
   // Register all routes
   userRouter.registerRoute(apiRouter);
   inboxRouter.registerRoute(apiRouter);
-  spredCastRouter.registerRoute(apiRouter);
+  spredCastRouter.registerRoute(apiRouter, indexFunc);
 
   apiApp.use('/v1', apiRouter);
   apiApp.use('/doc', express.static(path.join(__dirname, '/doc'), {dotfiles: 'allow'}));

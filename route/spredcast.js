@@ -1,10 +1,14 @@
 const common = require('spred-common');
 const httpHelper = require('spred-http-helper');
 
-function registerRoute (router) {
+var indexerFunc;
+
+function registerRoute (router, indexFunc) {
   router.get('/spredcast', getUserCast);
   router.post('/spredcast', createCast);
   router.post('/spredcast/:id/token', createCastToken);
+
+  indexerFunc = indexFunc;
 }
 
 function getUserCast (req, res, next) {
@@ -38,7 +42,13 @@ function createCast (req, res, next) {
                 if (err) {
                   next(err);
                 } else {
-                  httpHelper.sendReply(res, 201, fCast);
+                  addCastToIndex(fCast, function (err) {
+                    if (err) {
+                     next(err);
+                    } else {
+                      httpHelper.sendReply(res, 201, fCast);
+                    }
+                  });
                 }
               });
             }
@@ -72,6 +82,16 @@ function createCastToken (req, res, next) {
       });
     }
   });
+}
+
+function addCastToIndex(cCast, cb) {
+  var cast = {
+    objectID: cCast._id,
+    name: cCast.name,
+    type: 'cast',
+    url: cCast.url
+  };
+  indexerFunc(['global', 'cast'], [cast], cb);
 }
 
 module.exports.registerRoute = registerRoute;

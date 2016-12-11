@@ -19,7 +19,7 @@ before(function (done) {
         done(err);
       } else {
         console.log('Database dropped');
-        const app = apiApp.getApp(false);
+        const app = apiApp.getApp(false, fakeIndexer);
 
         app.listen(config.get('server.port'), function () {
           done();
@@ -39,3 +39,9 @@ describe('Testing api service', function () {
     requireDir('./route');
   });
 });
+
+function fakeIndexer(indexes, obj, cb) {
+  console.log('Indexing on ' + indexes);
+  console.log(obj);
+  cb();
+}

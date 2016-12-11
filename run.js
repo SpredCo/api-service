@@ -12,7 +12,7 @@ mongoose.connection.on('error', function (err) {
 mongoose.connection.on('open', function () {
   logger.info('Connection success !');
 
-  const app = apiApp.getApp(true);
+  const app = apiApp.getApp(true, fakeIndexer);
 
   app.listen(config.get('server.port'), function () {
     logger.info('Server started on port ' + config.get('server.port'));
@@ -25,3 +25,9 @@ const connectionStr = 'mongodb://' + config.get('dbConfig.host') + ':' +
 
 logger.info('Starting api service ...');
 mongoose.connect(connectionStr);
+
+function fakeIndexer(indexes, obj, cb) {
+  console.log('Indexing on ' + indexes);
+  console.log(obj);
+  cb();
+}

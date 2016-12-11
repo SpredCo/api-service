@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+* Update all route from /v1/spredcast to /v1/spredcastS
+
+*guedjm, Sun Dec 11 2016 23:25:57 GMT+0100 (CET)*
+
+---
 ## 0.8.1
 
 * Update doc

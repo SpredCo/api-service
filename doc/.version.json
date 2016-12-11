@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.9.0",
+    "author": "guedjm",
+    "date": "Sun Dec 11 2016 23:25:57 GMT+0100 (CET)",
+    "changes": [
+      "Update all route from /v1/spredcast to /v1/spredcastS"
+    ]
+  },
+  {
     "version": "0.8.1",
     "author": "guedjm",
     "date": "Sun Dec 11 2016 16:41:13 GMT+0100 (CET)",

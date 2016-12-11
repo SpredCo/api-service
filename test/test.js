@@ -40,7 +40,7 @@ describe('Testing api service', function () {
   });
 });
 
-function fakeIndexer(indexes, obj, cb) {
+function fakeIndexer (indexes, obj, cb) {
   console.log('Indexing on ' + indexes);
   console.log(obj);
   cb();

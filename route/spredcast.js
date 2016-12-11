@@ -44,7 +44,7 @@ function createCast (req, res, next) {
                 } else {
                   addCastToIndex(fCast, function (err) {
                     if (err) {
-                     next(err);
+                      next(err);
                     } else {
                       httpHelper.sendReply(res, 201, fCast);
                     }
@@ -84,7 +84,7 @@ function createCastToken (req, res, next) {
   });
 }
 
-function addCastToIndex(cCast, cb) {
+function addCastToIndex (cCast, cb) {
   var cast = {
     objectID: cCast._id,
     name: cCast.name,

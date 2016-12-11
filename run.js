@@ -26,7 +26,7 @@ const connectionStr = 'mongodb://' + config.get('dbConfig.host') + ':' +
 logger.info('Starting api service ...');
 mongoose.connect(connectionStr);
 
-function fakeIndexer(indexes, obj, cb) {
+function fakeIndexer (indexes, obj, cb) {
   console.log('Indexing on ' + indexes);
   console.log(obj);
   cb();

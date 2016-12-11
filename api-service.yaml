@@ -351,7 +351,7 @@ api:
                       type: string
                   -
                     tags:
-                      description: Tags of the cast (Array of string)
+                      description: Tags of the cast (Array of tag id)
                       required: false
                       in: body
                       type: string

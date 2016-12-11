@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.8.0",
+    "author": "guedjm",
+    "date": "Sun Dec 11 2016 15:51:50 GMT+0100 (CET)",
+    "changes": [
+      "Integrate tags to spredcasts"
+    ]
+  },
+  {
     "version": "0.7.3",
     "author": "guedjm",
     "date": "Sat Nov 26 2016 14:58:38 GMT+0100 (CET)",

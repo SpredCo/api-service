@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+* Integrate tags to spredcasts
+
+*guedjm, Sun Dec 11 2016 15:51:50 GMT+0100 (CET)*
+
+---
 ## 0.7.3
 
 * Update create state reply 

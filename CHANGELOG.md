@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1
+
+* Update doc
+
+*guedjm, Sun Dec 11 2016 16:41:13 GMT+0100 (CET)*
+
+---
 ## 0.8.0
 
 * Integrate tags to spredcasts

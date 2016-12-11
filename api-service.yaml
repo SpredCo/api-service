@@ -319,7 +319,7 @@ api:
         text: SpredCast related routes
         url:
           -
-            /v1/spredcast:
+            /v1/spredcasts:
               post:
                 summary: Create a new SpredCast
                 tags:
@@ -387,7 +387,7 @@ api:
                 errors:
                   - Invalid request
           -
-            /v1/spredcast/{id}/token:
+            /v1/spredcasts/{id}/token:
               post:
                 summary: Get a cast token for the cast
                 tags:
@@ -401,7 +401,7 @@ api:
                   - Cast not found
                   - Authorization refused
           -
-            /v1/spredcast:
+            /v1/spredcasts:
               get:
                 summary: Get users spredcast
                 tags:

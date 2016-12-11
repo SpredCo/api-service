@@ -4,9 +4,9 @@ const httpHelper = require('spred-http-helper');
 var indexerFunc;
 
 function registerRoute (router, indexFunc) {
-  router.get('/spredcast', getUserCast);
-  router.post('/spredcast', createCast);
-  router.post('/spredcast/:id/token', createCastToken);
+  router.get('/spredcasts', getUserCast);
+  router.post('/spredcasts', createCast);
+  router.post('/spredcasts/:id/token', createCastToken);
 
   indexerFunc = indexFunc;
 }

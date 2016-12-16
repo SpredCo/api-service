@@ -1,5 +1,15 @@
 [
   {
+    "version": "0.10.0",
+    "author": "guedjm",
+    "date": "Fri Dec 16 2016 13:42:06 GMT+0100 (CET)",
+    "changes": [
+      "Add route /v1/users/follow to get user's follow",
+      "Add route GET /v1/users/{id]/follow to know if user is following {id}",
+      "Update route POST /v1/users/follow (now return a follow object)"
+    ]
+  },
+  {
     "version": "0.9.0",
     "author": "guedjm",
     "date": "Sun Dec 11 2016 23:25:57 GMT+0100 (CET)",

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0
+
+* Add route /v1/users/follow to get user's follow
+* Add route GET /v1/users/{id]/follow to know if user is following {id}
+* Update route POST /v1/users/follow (now return a follow object)
+
+*guedjm, Fri Dec 16 2016 13:42:06 GMT+0100 (CET)*
+
+---
 ## 0.9.0
 
 * Update all route from /v1/spredcast to /v1/spredcastS

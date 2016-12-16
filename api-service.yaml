@@ -101,7 +101,29 @@ api:
                       description: User deleted
                       type: string
           -
+            /v1/users/follow:
+              get:
+                summary: Get all follow of the user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User's follow
+                      type: Follow object array
+          -
             /v1/users/{id}/follow:
+              get:
+                summary: Check if user is already following
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Result
+                      type: Result object
+                errors:
+                  - User not found
               post:
                 summary: Follow an user
                 tags:
@@ -110,7 +132,7 @@ api:
                   -
                     200:
                       description: Follow success
-                      type: string
+                      type: Follow object
                 errors:
                   - Already following
                   - User not found
@@ -124,7 +146,7 @@ api:
                   -
                     200:
                       description: Unfollow success
-                      type: string
+                      type: Result object
                 errors:
                   - Not following
                   - User not found
@@ -502,9 +524,6 @@ api:
           created_at: ""
           updated_at: ""
           picture_url: ""
-          following:
-            -
-              User
     -
       User Array:
         description: Array of User object
@@ -627,3 +646,23 @@ api:
             name: ""
             description: ""
             id: ""
+    -
+      Result object:
+        description: Result object
+        obj:
+          result: "true/false"
+    -
+      Follow object:
+        description: Follow object
+        obj:
+          user: "user id"
+          following: "user object of following user"
+          created_at: ""
+    -
+      Follow object array:
+        description: Follow object array
+        obj:
+          -
+            user: "user id"
+            following: "user object of following user"
+            created_at: ""

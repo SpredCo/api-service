@@ -176,7 +176,7 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, true, function (err, fUser) {
+            common.userModel.getById(user1._id, function (err, fUser) {
               if (err) {
                 done(err);
               } else {
@@ -339,19 +339,15 @@ describe('Testing user routes /v1/users/*', function () {
         .post('/v1/users/' + user2._id + '/follow')
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + fixture.token1)
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, true, function (err, fUser) {
-              if (err) {
-                done(err);
-              } else {
-                expect(fUser.following).to.have.lengthOf(1);
-                done();
-              }
-            });
+            expect(res.body.user).to.not.be.undefined;
+            expect(res.body.following).to.not.be.undefined;
+            expect(res.body.created_at).to.not.be.undefined;
+            done();
           }
         });
     });
@@ -393,6 +389,60 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
+  describe('Testing get user follow (GET /v1/users/follow)', function () {
+    it('Should reply the list of follow', function (done) {
+      apiSrv
+        .get('/v1/users/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            expect(res.body[0].user).to.equal(user1._id.toString());
+            expect(res.body[0].following.id).to.equal(user2._id.toString());
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing get user is follow (GET /v1/users/:id/follow)', function () {
+    it('Should reply true if user is already following', function (done) {
+      apiSrv
+        .get('/v1/users/' + user2._id + '/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token1)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+
+    it('Should reply true if user is already following', function (done) {
+      apiSrv
+        .get('/v1/users/' + user1._id + '/follow')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token2)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.false;
+            done();
+          }
+        });
+    });
+  });
+
   describe('Testing user unfollow (POST /v1/users/:id/unfollow)', function () {
     it('Should unfollow the user', function (done) {
       apiSrv
@@ -404,14 +454,7 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, true, function (err, fUser) {
-              if (err) {
-                done(err);
-              } else {
-                expect(fUser.following).to.have.lengthOf(0);
-                done();
-              }
-            });
+            done();
           }
         });
     });
@@ -537,7 +580,7 @@ describe('Testing user routes /v1/users/*', function () {
           if (err) {
             done(err);
           } else {
-            common.userModel.getById(user1._id, true, function (err, fUser) {
+            common.userModel.getById(user1._id, function (err, fUser) {
               if (err) {
                 done(err);
               } else {

@@ -2,10 +2,12 @@ const common = require('spred-common');
 const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
+  router.get('/users/follow', getUserFollow);
   router.get('/users/:id', getUserInfo);
   router.patch('/users/me', updateUser);
   router.delete('/users/me', deleteUser);
 
+  router.get('/users/:id/follow', userIsFollowing);
   router.post('/users/:id/follow', followUser);
   router.post('/users/:id/unfollow', unfollowUser);
   router.post('/users/:id/report', reportUser);
@@ -19,7 +21,7 @@ function getUserInfo (req, res, next) {
     req.params.id = req.user._id;
   }
   if (req.params.id[0] === '@') {
-    common.userModel.getByPseudo(req.params.id.substring(1), false, function (err, fUser) {
+    common.userModel.getByPseudo(req.params.id.substring(1), function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {
@@ -29,7 +31,7 @@ function getUserInfo (req, res, next) {
       }
     });
   } else {
-    common.userModel.getById(req.params.id, req.params.id === req.user._id, function (err, fUser) {
+    common.userModel.getById(req.params.id, function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {
@@ -127,33 +129,54 @@ function searchUserByPseudo (req, res, next) {
   });
 }
 
+function getUserFollow (req, res, next) {
+  common.followModel.getUserFollow(req.user._id, function (err, fFollows) {
+    if (err) {
+      next(err);
+    } else {
+      httpHelper.sendReply(res, 200, fFollows);
+    }
+  });
+}
+
+function userIsFollowing (req, res, next) {
+  common.userModel.getById(req.params.id, function (err, fUser) {
+    if (err) {
+      next(err);
+    } else if (fUser === null) {
+      httpHelper.sendReply(res, httpHelper.error.userNotFound());
+    } else {
+      common.followModel.userIsFollowing(req.user._id, req.params.id, function (err, result) {
+        if (err) {
+          next(err);
+        } else {
+          httpHelper.sendReply(res, 200, { result: result });
+        }
+      });
+    }
+  });
+}
+
 function followUser (req, res, next) {
-  common.userModel.getById(req.params.id, false, function (err, fUser) {
+  common.userModel.getById(req.params.id, function (err, fUser) {
     if (err) {
       next(err);
     } else if (fUser == null) {
       httpHelper.sendReply(res, httpHelper.error.userNotFound());
     } else {
-      common.userModel.getById(req.user._id, true, function (err, me) {
+      common.followModel.userIsFollowing(req.user._id, req.params.id, function (err, result) {
         if (err) {
           next(err);
+        } else if (result === true) {
+          httpHelper.sendReply(res, httpHelper.error.alreadyFollowing());
         } else {
-          var alreadyFollowing = false;
-          me.following.forEach(function (elem) {
-            if (elem._id.toString() === req.params.id && !alreadyFollowing) {
-              httpHelper.sendReply(res, httpHelper.error.alreadyFollowing());
-              alreadyFollowing = true;
+          common.followModel.createNew(req.user._id, req.params.id, function (err, cFollow) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 201, cFollow);
             }
           });
-          if (!alreadyFollowing) {
-            me.follow(fUser, function (err) {
-              if (err) {
-                next(err);
-              } else {
-                httpHelper.sendReply(res, 200, { 'result': 'ok' });
-              }
-            });
-          }
         }
       });
     }
@@ -161,33 +184,25 @@ function followUser (req, res, next) {
 }
 
 function unfollowUser (req, res, next) {
-  common.userModel.getById(req.params.id, false, function (err, fUser) {
+  common.userModel.getById(req.params.id, function (err, fUser) {
     if (err) {
       next(err);
     } else if (fUser == null) {
       httpHelper.sendReply(res, httpHelper.error.userNotFound());
     } else {
-      common.userModel.getById(req.user._id, true, function (err, me) {
+      common.followModel.userIsFollowing(req.user._id, req.params.id, function (err, result) {
         if (err) {
           next(err);
+        } else if (result === false) {
+          httpHelper.sendReply(res, httpHelper.error.notFollowing());
         } else {
-          var find = false;
-          me.following.forEach(function (elem) {
-            if (elem._id.toString() === req.params.id) {
-              find = true;
+          common.followModel.unFollow(req.user._id, req.params.id, function (err) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 200, {'result': 'ok'});
             }
           });
-          if (find === false) {
-            httpHelper.sendReply(res, httpHelper.error.notFollowing());
-          } else {
-            me.unfollow(fUser, function (err) {
-              if (err) {
-                next(err);
-              } else {
-                httpHelper.sendReply(res, 200, { 'result': 'ok' });
-              }
-            });
-          }
         }
       });
     }
@@ -198,7 +213,7 @@ function reportUser (req, res, next) {
   if (req.body.motif === undefined || req.params.id === req.user._id.toString()) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {
-    common.userModel.getById(req.params.id, false, function (err, fUser) {
+    common.userModel.getById(req.params.id, function (err, fUser) {
       if (err) {
         next(err);
       } else if (fUser == null) {

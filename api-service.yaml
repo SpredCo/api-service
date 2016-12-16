@@ -130,7 +130,7 @@ api:
                   - Bearer Auth
                 responses:
                   -
-                    200:
+                    201:
                       description: Follow success
                       type: Follow object
                 errors:

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+* Integrate cast reminders
+
+*guedjm, Fri Dec 16 2016 21:05:23 GMT+0100 (CET)*
+
+---
 ## 0.11.0
 
 * Move all route to get user information to login service (except GET /v1/users/me)

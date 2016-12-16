@@ -1,0 +1,804 @@
+api:
+  name: Spred API service
+  description: |
+    The api service of Spred, allows user (througt registred client) to interact and use the Spred service.
+    To access resources from the api service, the *OAuth2 Authorization Framework* as been implemented. For more information, check the {{RFC 6749!https://tools.ietf.org/html/rfc6749}}.;;;
+    The login service is available here : {{login.sharemyscreen.fr:3000!http://login.sharemyscreen.fr:3000}} and its documentation {{here!http://login.sharemyscreen.fr:3000/doc}};;;
+    The api service is available here : {{api.sharemyscreen.fr:3000!http://api.sharemyscreen.fr:3000}}
+  paragraphs:
+    -
+      Information:
+        text: |
+          The api service of Spred, allows user (througt registred client) to interact and use the Spred service.
+          To access resources from the api service, the *OAuth2 Authorization Framework* as been implemented. For more information, check the {{RFC 6749!https://tools.ietf.org/html/rfc6749}}.;;;
+    -
+      Authorization:
+        text: |
+          All requests sent to the api service MUST be authorized with an *Access token* (of type bearer).;;;
+          The steps to obtain an access token are explained in the {{login service documentation!http://login.sharemyscreen.fr:3000/doc}};;;
+          Once you get your access token, you will need to include it in the **HTTP Header** of the requests:;;;
+          ```
+          Authorization: Bearer <access_token>
+          ```
+          If a request is unauthenticated, the server will reply a status code **403** with a body **Unauthorized**.
+    -
+      Request and Reply format:
+        text: |
+          All requests must be **HTTP** request.;;;
+          Request body must be **JSON** formated.;;;
+          Reply are **JSON** formated object in **snake_case**.
+  tags:
+    -
+      Bearer Auth:
+        link: paragraph-authorization
+
+  routes:
+    -
+      User:
+        text: |
+          User related requests
+        url:
+          -
+            /v1/users/me:
+              get:
+                summary: Get user information.
+                description: If {id} is equal to 'me', return the current user information.
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Ok
+                      type: User
+                errors:
+                  - User not found
+              patch:
+                summary: Update user information.
+                description: /!\ {id} MUST be set to 'me' or reply will be a 404 not found
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    email:
+                      description: The new user email
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    first_name:
+                      description: The new user first name
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    last_name:
+                      description: The new user last name
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    picture_url:
+                      description: The new picture url
+                      required: false
+                      in: body
+                      type: string
+                responses:
+                  -
+                    200:
+                      description: Update success
+                      type: User
+                errors:
+                  - Invalid User update
+                  - User exists
+              delete:
+                summary: Delete the user
+                description: /!\ {id} MUST be set to 'me' or reply will be a 404 not found
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User deleted
+                      type: string
+          -
+            /v1/users/follow:
+              get:
+                summary: Get all follow of the user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User's follow
+                      type: Follow object array
+          -
+            /v1/users/follower:
+              get:
+                summary: Get user following me
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Users following me
+                      type: Follower object array
+          -
+            /v1/users/{id}/follow:
+              get:
+                summary: Check if user is already following
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Result
+                      type: Result object
+                errors:
+                  - User not found
+              post:
+                summary: Follow an user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: Follow success
+                      type: Follow object
+                errors:
+                  - Already following
+                  - User not found
+          -
+            /v1/users/{id}/unfollow:
+              post:
+                summary: Unfollow an user
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Unfollow success
+                      type: Result object
+                errors:
+                  - Not following
+                  - User not found
+          -
+            /v1/users/{id}/report:
+              post:
+                summary: Report an user
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    motif:
+                      description: report motif
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    200:
+                      description: Report success
+                      type: string
+                errors:
+                  - Invalid request
+                  - User not found
+          -
+            /v1/users/search/email/{partial_email}:
+              get:
+                summary: Search for users by email (partial)
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Search result
+                      type: User Array
+          -
+            /v1/users/search/email/{partial_pseudo}:
+              get:
+                summary: Search for users by pseudo (partial)
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Search result
+                      type: User Array
+
+    -
+      Inbox:
+        text: Inbox related routes
+        url:
+          -
+            /v1/inbox/conversation:
+              get:
+                summary: Get user converstion
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User inbox
+                      type: Simple conversation Array
+          -
+            /v1/inbox/unread:
+              get:
+                summary: Get number of unread message
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Number of unread message: {result: 5}
+                      type: int
+          -
+            /v1/inbox/conversation/{id}:
+              get:
+                summary: Get a conversation
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Conversation
+                      type: Conversation
+                errors:
+                  - Conversation not found
+          -
+            /v1/inbox/conversation/{id}/message:
+              post:
+                summary: Reply to the conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    content:
+                      description: Message to send
+                      in: body
+                      type: string
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Message sent
+                      type: Message
+                errors:
+                  - Invalid request
+                  - Conversation not found
+                  - Cannot reply
+          -
+            /v1/inbox/conversation/{conversationId}/read:
+              patch:
+                summary: Update the read of all message in a conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    read:
+                      description: New read value
+                      in: body
+                      type: string
+                      required: true
+                errors:
+                  - Invalid request
+                  - Conversation not found
+          -
+            /v1/inbox/conversation/{conversationId}/message/{messageId}:
+              get:
+                summary: Get a message
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: The message
+                      type: Message
+                errors:
+                  - Conversation not found
+                  - Message not found
+          -
+            /v1/inbox/conversation/{conversationId}/message/{messageId}/read:
+              patch:
+                summary: Update read status of the message
+                tags:
+                  - Bearer Auth
+                parameters:
+                  - 
+                    read:
+                      description: Read status
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Read status updated
+                      type: string
+          -
+            /v1/inbox/conversation:
+              post:
+                summary: Create a new conversation
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    object:
+                      description: Conversation object
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    members:
+                      description: Conversation members ID /!\ ARRAY OF USER ID (creator must be in this array)
+                      type: User array
+                      in: body
+                      required: true
+                  -
+                    content:
+                      description: First message content
+                      type: string
+                      in: body
+                      required: true
+                responses:
+                  -
+                    201:
+                      description: Conversation created
+                      type: Conversation
+                errors:
+                  - Invalid request
+                  - User not found
+    -
+      Spredcast:
+        text: SpredCast related routes
+        url:
+          -
+            /v1/spredcasts:
+              post:
+                summary: Create a new SpredCast
+                tags:
+                  - Bearer Auth
+                parameters:
+                  -
+                    name:
+                      description: The name of the cast
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    description:
+                      description: The description of the cast
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    is_public:
+                      description: Public cast (boolean type)
+                      type: string
+                      in: body
+                      required: true
+                  -
+                    date:
+                      description: Date of the cast (must be a js formated date). Can be the string 'now'.
+                      required: true
+                      in: body
+                      type: string
+                  -
+                    tags:
+                      description: Tags of the cast (Array of tag id)
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    user_capacity:
+                      description: Max number of user in the cast (int)
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    members:
+                      description: Members allowed to join the cast (as user id array). Required only for private cast
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    duration:
+                      description: Estimated duration of the cast (int value)
+                      required: false
+                      in: body
+                      type: string
+                  -
+                    cover_url:
+                      description: Url of the cover photo
+                      required: false
+                      in: body
+                      type: string
+                responses:
+                  -
+                    201:
+                      description: Cast created
+                      type: Spredcast
+                errors:
+                  - Invalid request
+          -
+            /v1/spredcasts/{id}/token:
+              post:
+                summary: Get a cast token for the cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: Token created
+                      type: Cast token
+                errors:
+                  - Cast not found
+                  - Authorization refused
+          -
+            /v1/spredcasts:
+              get:
+                summary: Get users spredcast
+                tags:
+                - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User spredcast
+                      type: Spredcast array
+          -
+            /v1/sprecasts/reminder:
+              get:
+                summary: Get user reminders
+                tags:
+                - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User reminder
+                      type: User reminder object array
+          -
+            /v1/spredcasts/{id}/remind:
+              get:
+                summary: Check if user is already reminded for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Result
+                      type: Result object
+                errors:
+                  - Cast not found
+              post:
+                summary: Create a reminder for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: Reminder created
+                      type: User reminder object
+                errors:
+                  - Cast not found
+                  - Already reminded
+              delete:
+                summary: Delete the reminder fo this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Reminder deleted
+                      type: Result object
+                errors:
+                  - Cast not found
+                  - Not reminded
+          -
+            /v1/spredcasts/{id}/reminders:
+              get:
+                summary: Get all reminded user for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: All reminded user
+                      type: Cast reminder object array
+                errors:
+                  - Cast not found
+                  - Not cast creator
+
+  errors:
+    -
+      Invalid request:
+        status: 400
+        code: 1
+        message: Invalid request
+        fix: Check the request parameters twice
+    -
+      Already following:
+        status: 400
+        code: 2
+        subcode: 4
+        message: Already following this user
+    -
+      Not following:
+        status: 400
+        code: 2
+        subcode: 5
+        message: Not following this user
+    -
+      Cannot Reply:
+        status: 400
+        code: 3
+        subcode: 1
+        message: Cannot reply to this conversation
+    -
+      Invalid User update:
+        status: 400
+        code: 2
+        subcode: 3
+        message: Impossible to update email address with an external api login
+        fix: You can't update the email of an user registred with an external api
+    -
+      Already reminded:
+        status: 400
+        code: 7
+        subcode: 1
+        message: Already reminded for this cast
+    -
+      Not reminded:
+        status: 400
+        code: 7
+        subcode: 2
+        message: Not reminded for this cast
+    -
+      Not cast creator:
+        status: 400
+        code: 5
+        subcode: 3
+        message: Not the cast creator
+    -
+      User exists:
+        status: 403
+        code: 2
+        subcode: 1
+        message: User exists (email address already in use)
+    -
+      Authorization refused:
+        status: 403
+        code: 5
+        subcode: 1
+        message: Authorization refused
+    -
+      User not found:
+        status: 404
+        code: 2
+        subcode: 1
+        message: Unable to find user
+        fix: Check user publicId twice
+    -
+      Cast not found:
+        status: 404
+        code: 5
+        subcode: 1
+        message: Unable to find cast
+    -
+      Conversation not found:
+        status: 404
+        code: 3
+        subcode: 1
+        message: Unable to find conversation
+    -
+      Message not found:
+        status: 404
+        code: 4
+        subcode: 1
+        message: Unable to find message
+
+  objects:
+    -
+      Error:
+        description: Error object (sub_code is facultative)
+        obj:
+          code: 0
+          sub_code: 0
+          message: ""
+    -
+      User:
+        description: User object
+        obj:
+          id: ""
+          email: ""
+          pseudo: ""
+          first_name: ""
+          last_name: ""
+          created_at: ""
+          updated_at: ""
+          picture_url: ""
+    -
+      User Array:
+        description: Array of User object
+        obj:
+          -
+            id: ""
+            email: ""
+            first_name: ""
+            last_name: ""
+            created_at: ""
+            updated_at: ""
+            picture_url: ""
+    -
+      Message:
+        description: Message object
+        obj:
+          id: ""
+          conversation: ""
+          from: ""
+          content: ""
+          read: ""
+          created_at: ""
+    -
+      Message Array:
+        description: Array of message
+        obj:
+          -
+            id: ""
+            conversation: ""
+            from: ""
+            content: ""
+            read: ""
+            created_at: ""
+    -
+      Conversation:
+        description: Conversation object
+        obj:
+          id: ""
+          object: ""
+          members: "User Array"
+          can_answer: ""
+          last_msg: ""
+          created_at: ""
+          msg:
+            - "Message Array"
+    -
+      Simple conversation:
+        description: Simple conversation object (does not contain message)
+        obj:
+          id: ""
+          object: ""
+          members: "User Array"
+          can_answer: ""
+          last_msg: ""
+          created_at: ""
+          read: ""
+    -
+      Simple conversation array:
+        description: Simple conversation array object (does not contain message)
+        obj:
+          -
+            id: ""
+            object: ""
+            members: "User Array"
+            can_answer: ""
+            last_msg: ""
+            created_at: ""
+            read: ""
+    -
+      Spredcast:
+        description: Spredcast object
+        obj:
+          id: ""
+          name: ""
+          description: ""
+          tags: [ "Tag object" ]
+          date: ""
+          is_public: true
+          user_capacity: 10
+          members: [ "user_id" ]
+          duration: 10
+          url: ""
+          cover_url: ""
+    -
+      Spredcast array:
+        description: Spredcast array object
+        obj:
+          -
+            id: ""
+            name: ""
+            description: ""
+            tags: [ "Tag Object" ]
+            date: ""
+            is_public: true
+            user_capacity: 10
+            members: [ "user" ]
+            duration: 10
+            url: ""
+            cover_url: ""
+    -
+      Cast token:
+        description: Cast token object
+        obj:
+          cast_token: ""
+          spredcast: "id"
+          presenter: true
+          pseudo: ""
+    -
+      Tag:
+        description: Tag Object
+        obj:
+          name: ""
+          description: ""
+          id: ""
+    -
+      Tag array:
+        description: Tag array
+        obj:
+          -
+            name: ""
+            description: ""
+            id: ""
+    -
+      Result object:
+        description: Result object
+        obj:
+          result: "true/false"
+    -
+      Follow object:
+        description: Follow object
+        obj:
+          user: "user id"
+          following: "user object of following user"
+          created_at: ""
+    -
+      Follow object array:
+        description: Follow object array
+        obj:
+          -
+            user: "user id"
+            following: "user object of following user"
+            created_at: ""
+    -
+      Follower object:
+        description: Follower object
+        obj:
+          user: "User object of follower"
+          following: "user id"
+          created_at: ""
+    -
+      Follower object array:
+        description: Follower object array
+        obj:
+          -
+            user: "User object of follower"
+            following: "user id"
+            created_at: ""
+    -
+      User reminder object:
+        description: User reminder object
+        obj:
+          cast: "cast object"
+          user: "user id"
+          created_at: ""
+    -
+      User reminder object array:
+        description: User reminder object
+        obj:
+          -
+            cast: "cast object"
+            user: "user id"
+            created_at: ""
+    -
+      Cast reminder object:
+        description: Cast reminder object
+        obj:
+          cast: "cast id"
+          user: "user object"
+          created_at: ""
+    -
+      Cast reminder object array:
+        description: Cast reminder object
+        obj:
+          -
+            cast: "cast id"
+            user: "user object"
+            created_at: ""

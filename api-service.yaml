@@ -39,7 +39,7 @@ api:
           User related requests
         url:
           -
-            /v1/users/{id}:
+            /v1/users/me:
               get:
                 summary: Get user information.
                 description: If {id} is equal to 'me', return the current user information.

@@ -53,7 +53,7 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
-  describe('Testing get user information (GET /v1/users/:id)', function () {
+  describe('Testing get user information (GET /v1/users/me)', function () {
     it('Should reply current user information (/me)', function (done) {
       apiSrv
         .get('/v1/users/me')
@@ -74,84 +74,10 @@ describe('Testing user routes /v1/users/*', function () {
         });
     });
 
-    it('Should reply user2 information', function (done) {
-      apiSrv
-        .get('/v1/users/' + user2._id)
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + fixture.token1)
-        .expect(200)
-        .end(function (err, res) {
-          if (err) {
-            done(err);
-          } else {
-            expect(res.body.id).to.eql(user2._id.toString());
-            expect(res.body.email).to.equal(user2.email);
-            expect(res.body.first_name).to.equal(user2.firstName);
-            expect(res.body.last_name).to.equal(user2.lastName);
-            expect(res.body.picture_url).to.equal(user2.pictureUrl);
-            done();
-          }
-        });
-    });
-
-    it('Should reply user2 information if param is @user2pseudo', function (done) {
-      apiSrv
-        .get('/v1/users/@' + user2.pseudo)
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + fixture.token1)
-        .expect(200)
-        .end(function (err, res) {
-          if (err) {
-            done(err);
-          } else {
-            expect(res.body.id).to.eql(user2._id.toString());
-            expect(res.body.email).to.equal(user2.email);
-            expect(res.body.first_name).to.equal(user2.firstName);
-            expect(res.body.last_name).to.equal(user2.lastName);
-            expect(res.body.picture_url).to.equal(user2.pictureUrl);
-            done();
-          }
-        });
-    });
-
-    it('Should reply userNotFound when bad id', function (done) {
-      apiSrv
-        .get('/v1/users/toto')
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + fixture.token1)
-        .expect(404)
-        .end(function (err, res) {
-          if (err) {
-            done(err);
-          } else {
-            expect(res.body.code).to.equal(2);
-            expect(res.body.sub_code).to.equal(1);
-            expect(res.body.message).to.equal('Unable to find user');
-            done();
-          }
-        });
-    });
-
     it('Should reply authentication error when missing access token', function (done) {
       apiSrv
         .get('/v1/users/me')
         .set('Content-Type', 'application/json')
-        .expect(401)
-        .end(function (err, res) {
-          if (err) {
-            done(err);
-          } else {
-            expect(res.text).to.equal('Unauthorized');
-            done();
-          }
-        });
-    });
-
-    it('Should reply authentication error when bad access token', function (done) {
-      apiSrv
-        .get('/v1/users/toto')
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer Hello')
         .expect(401)
         .end(function (err, res) {
           if (err) {
@@ -429,7 +355,7 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
-  describe('Testing get user is follow (GET /v1/users/:id/follow)', function () {
+  describe('Testing get user is following (GET /v1/users/:id/follow)', function () {
     it('Should reply true if user is already following', function (done) {
       apiSrv
         .get('/v1/users/' + user2._id + '/follow')
@@ -446,7 +372,7 @@ describe('Testing user routes /v1/users/*', function () {
         });
     });
 
-    it('Should reply true if user is already following', function (done) {
+    it('Should reply false if user is already following', function (done) {
       apiSrv
         .get('/v1/users/' + user1._id + '/follow')
         .set('Content-Type', 'application/json')

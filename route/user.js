@@ -2,9 +2,9 @@ const common = require('spred-common');
 const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
+  router.get('/users/me', getUserInfo);
   router.get('/users/follow', getUserFollow);
   router.get('/users/follower', getUserFollower);
-  router.get('/users/:id', getUserInfo);
   router.patch('/users/me', updateUser);
   router.delete('/users/me', deleteUser);
 
@@ -18,30 +18,15 @@ function registerRoute (router) {
 }
 
 function getUserInfo (req, res, next) {
-  if (req.params.id === 'me') {
-    req.params.id = req.user._id;
-  }
-  if (req.params.id[0] === '@') {
-    common.userModel.getByPseudo(req.params.id.substring(1), function (err, fUser) {
-      if (err) {
-        next(err);
-      } else if (fUser == null) {
-        httpHelper.sendReply(res, httpHelper.error.userNotFound());
-      } else {
-        httpHelper.sendReply(res, 200, fUser);
-      }
-    });
-  } else {
-    common.userModel.getById(req.params.id, function (err, fUser) {
-      if (err) {
-        next(err);
-      } else if (fUser == null) {
-        httpHelper.sendReply(res, httpHelper.error.userNotFound());
-      } else {
-        httpHelper.sendReply(res, 200, fUser, next);
-      }
-    });
-  }
+  common.userModel.getById(req.user._id, function (err, fUser) {
+    if (err) {
+      next(err);
+    } else if (fUser == null) {
+      httpHelper.sendReply(res, httpHelper.error.userNotFound());
+    } else {
+      httpHelper.sendReply(res, 200, fUser, next);
+    }
+  });
 }
 
 function updateUser (req, res, next) {

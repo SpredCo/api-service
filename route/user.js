@@ -3,6 +3,7 @@ const httpHelper = require('spred-http-helper');
 
 function registerRoute (router) {
   router.get('/users/follow', getUserFollow);
+  router.get('/users/follower', getUserFollower);
   router.get('/users/:id', getUserInfo);
   router.patch('/users/me', updateUser);
   router.delete('/users/me', deleteUser);
@@ -139,6 +140,16 @@ function getUserFollow (req, res, next) {
   });
 }
 
+function getUserFollower (req, res, next) {
+  common.followModel.getUserFollowed(req.user._id, function (err, fFollowers) {
+    if (err) {
+      next(err);
+    } else {
+      httpHelper.sendReply(res, 200, fFollowers);
+    }
+  });
+}
+
 function userIsFollowing (req, res, next) {
   common.userModel.getById(req.params.id, function (err, fUser) {
     if (err) {
@@ -196,11 +207,11 @@ function unfollowUser (req, res, next) {
         } else if (result === false) {
           httpHelper.sendReply(res, httpHelper.error.notFollowing());
         } else {
-          common.followModel.unFollow(req.user._id, req.params.id, function (err) {
+          common.followModel.unFollow(req.user._id, req.params.id, function (err, result) {
             if (err) {
               next(err);
             } else {
-              httpHelper.sendReply(res, 200, {'result': 'ok'});
+              httpHelper.sendReply(res, 200, {'result': result});
             }
           });
         }

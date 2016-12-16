@@ -409,6 +409,26 @@ describe('Testing user routes /v1/users/*', function () {
     });
   });
 
+  describe('Testing get user follower (GET /v1/users/follower)', function () {
+    it('Should reply user following me', function (done) {
+      apiSrv
+        .get('/v1/users/follower')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + fixture.token2)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            expect(res.body[0].user.id).to.equal(user1._id.toString());
+            expect(res.body[0].following).to.equal(user2._id.toString());
+            done();
+          }
+        });
+    });
+  });
+
   describe('Testing get user is follow (GET /v1/users/:id/follow)', function () {
     it('Should reply true if user is already following', function (done) {
       apiSrv

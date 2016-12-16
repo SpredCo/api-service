@@ -112,6 +112,17 @@ api:
                       description: User's follow
                       type: Follow object array
           -
+            /v1/users/follower:
+              get:
+                summary: Get user following me
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Users following me
+                      type: Follower object array
+          -
             /v1/users/{id}/follow:
               get:
                 summary: Check if user is already following
@@ -665,4 +676,19 @@ api:
           -
             user: "user id"
             following: "user object of following user"
+            created_at: ""
+    -
+      Follower object:
+        description: Follower object
+        obj:
+          user: "User object of follower"
+          following: "user id"
+          created_at: ""
+    -
+      Follower object array:
+        description: Follower object array
+        obj:
+          -
+            user: "User object of follower"
+            following: "user id"
             created_at: ""

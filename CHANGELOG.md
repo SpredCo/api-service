@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.1
+
+* Fix docuementation
+
+*guedjm, Fri Dec 16 2016 13:59:52 GMT+0100 (CET)*
+
+---
 ## 0.10.0
 
 * Add route /v1/users/follow to get user's follow

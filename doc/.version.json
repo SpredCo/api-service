@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.11.0",
+    "author": "guedjm",
+    "date": "Fri Dec 16 2016 18:16:46 GMT+0100 (CET)",
+    "changes": [
+      "Move all route to get user information to login service (except GET /v1/users/me)"
+    ]
+  },
+  {
     "version": "0.10.2",
     "author": "guedjm",
     "date": "Fri Dec 16 2016 16:08:46 GMT+0100 (CET)",

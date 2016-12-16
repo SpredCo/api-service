@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+* Move all route to get user information to login service (except GET /v1/users/me)
+
+*guedjm, Fri Dec 16 2016 18:16:46 GMT+0100 (CET)*
+
+---
 ## 0.10.2
 
 * Add route GET /v1/users/follower to get who is following user

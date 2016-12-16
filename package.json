@@ -1,6 +1,6 @@
 {
   "name": "spred-api-service",
-  "version": "0.10.2",
+  "version": "0.11.0",
   "description": "API service for spreed project",
   "main": "index.js",
   "scripts": {

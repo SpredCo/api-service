@@ -5,7 +5,12 @@ var indexerFunc;
 
 function registerRoute (router, indexFunc) {
   router.get('/spredcasts', getUserCast);
+  router.get('/spredcasts/reminders', getUserReminder);
   router.post('/spredcasts', createCast);
+  router.get('/spredcasts/:id/remind', userIsReminded);
+  router.post('/spredcasts/:id/remind', remindCast);
+  router.delete('/spredcasts/:id/remind', removeReminder);
+  router.get('/spredcasts/:id/reminders', getCastReminder);
   router.post('/spredcasts/:id/token', createCastToken);
 
   indexerFunc = indexFunc;
@@ -78,6 +83,106 @@ function createCastToken (req, res, next) {
             pseudo: cToken.pseudo
           };
           httpHelper.sendReply(res, 201, reply);
+        }
+      });
+    }
+  });
+}
+
+function getUserReminder (req, res, next) {
+  common.spredcastReminderModel.getUserReminder(req.user._id, function (err, fReminders) {
+    if (err) {
+      next(err);
+    } else {
+      httpHelper.sendReply(res, 200, fReminders);
+    }
+  });
+}
+
+function remindCast (req, res, next) {
+  common.spredCastModel.getById(req.params.id, function (err, fCast) {
+    if (err) {
+      next(err);
+    } else if (fCast === null) {
+      httpHelper.sendReply(res, httpHelper.error.castNotFound());
+    } else {
+      common.spredcastReminderModel.userIsReminded(req.params.id, req.user._id, function (err, result) {
+        if (err) {
+          next(err);
+        } else if (result === true) {
+          httpHelper.sendReply(res, httpHelper.error.alreadyReminded());
+        } else {
+          common.spredcastReminderModel.createNew(req.params.id, req.user._id, function (err, cReminders) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 201, cReminders);
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
+function userIsReminded (req, res, next) {
+  common.spredCastModel.getById(req.params.id, function (err, fCast) {
+    if (err) {
+      next(err);
+    } else if (fCast === null) {
+      httpHelper.sendReply(res, httpHelper.error.castNotFound());
+    } else {
+      common.spredcastReminderModel.userIsReminded(req.params.id, req.user._id, function (err, result) {
+        if (err) {
+          next(err);
+        } else {
+          httpHelper.sendReply(res, 200, {result: result});
+        }
+      });
+    }
+  });
+}
+
+function removeReminder (req, res, next) {
+  common.spredCastModel.getById(req.params.id, function (err, fCast) {
+    if (err) {
+      next(err);
+    } else if (fCast === null) {
+      httpHelper.sendReply(res, httpHelper.error.castNotFound());
+    } else {
+      common.spredcastReminderModel.userIsReminded(req.params.id, req.user._id, function (err, result) {
+        if (err) {
+          next(err);
+        } else if (result === false) {
+          httpHelper.sendReply(res, httpHelper.error.notReminded());
+        } else {
+          common.spredcastReminderModel.removeReminder(req.params.id, req.user._id, function (err, result) {
+            if (err) {
+              next(err);
+            } else {
+              httpHelper.sendReply(res, 200, {result: result});
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
+function getCastReminder (req, res, next) {
+  common.spredCastModel.getById(req.params.id, function (err, fCast) {
+    if (err) {
+      next(err);
+    } else if (fCast === null) {
+      httpHelper.sendReply(res, httpHelper.error.castNotFound());
+    } else if (fCast.creator.toString() !== req.user._id.toString()) {
+      httpHelper.sendReply(res, httpHelper.error.notCastCreator());
+    } else {
+      common.spredcastReminderModel.getCastReminder(req.params.id, function (err, fReminders) {
+        if (err) {
+          next(err);
+        } else {
+          httpHelper.sendReply(res, 200, fReminders);
         }
       });
     }

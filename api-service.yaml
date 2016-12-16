@@ -444,6 +444,68 @@ api:
                     200:
                       description: User spredcast
                       type: Spredcast array
+          -
+            /v1/sprecasts/reminder:
+              get:
+                summary: Get user reminders
+                tags:
+                - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: User reminder
+                      type: User reminder object array
+          -
+            /v1/spredcasts/{id}/remind:
+              get:
+                summary: Check if user is already reminded for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Result
+                      type: Result object
+                errors:
+                  - Cast not found
+              post:
+                summary: Create a reminder for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: Reminder created
+                      type: User reminder object
+                errors:
+                  - Cast not found
+                  - Already reminded
+              delete:
+                summary: Delete the reminder fo this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Reminder deleted
+                      type: Result object
+                errors:
+                  - Cast not found
+                  - Not reminded
+          -
+            /v1/spredcasts/{id}/reminders:
+              get:
+                summary: Get all reminded user for this cast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: All reminded user
+                      type: Cast reminder object array
+                errors:
+                  - Cast not found
+                  - Not cast creator
 
   errors:
     -
@@ -477,6 +539,24 @@ api:
         subcode: 3
         message: Impossible to update email address with an external api login
         fix: You can't update the email of an user registred with an external api
+    -
+      Already reminded:
+        status: 400
+        code: 7
+        subcode: 1
+        message: Already reminded for this cast
+    -
+      Not reminded:
+        status: 400
+        code: 7
+        subcode: 2
+        message: Not reminded for this cast
+    -
+      Not cast creator:
+        status: 400
+        code: 5
+        subcode: 3
+        message: Not the cast creator
     -
       User exists:
         status: 403
@@ -691,4 +771,34 @@ api:
           -
             user: "User object of follower"
             following: "user id"
+            created_at: ""
+    -
+      User reminder object:
+        description: User reminder object
+        obj:
+          cast: "cast object"
+          user: "user id"
+          created_at: ""
+    -
+      User reminder object array:
+        description: User reminder object
+        obj:
+          -
+            cast: "cast object"
+            user: "user id"
+            created_at: ""
+    -
+      Cast reminder object:
+        description: Cast reminder object
+        obj:
+          cast: "cast id"
+          user: "user object"
+          created_at: ""
+    -
+      Cast reminder object array:
+        description: Cast reminder object
+        obj:
+          -
+            cast: "cast id"
+            user: "user object"
             created_at: ""

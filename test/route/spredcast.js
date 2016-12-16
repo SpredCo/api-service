@@ -7,6 +7,7 @@ const common = require('spred-common');
 const url = config.get('test.server.url') + ':' + config.get('test.server.port');
 const apiSrv = supertest(url);
 
+var user1;
 var user2;
 var token1;
 var token2;
@@ -55,6 +56,7 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
                                       if (err) {
                                         done(err);
                                       } else {
+                                        user1 = cUser1;
                                         user2 = cUser2;
                                         token1 = cToken1;
                                         token2 = cToken2;
@@ -279,6 +281,149 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
           if (err) {
             done(err);
           } else {
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing cast reminder creation (POST /v1/spredcast/{id}/remind', function () {
+    it('Should create a new spredcastReminder', function (done) {
+      apiSrv
+        .post('/v1/spredcasts/' + cast1.id + '/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(201)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.cast).to.not.be.undefined;
+            expect(res.body.user).to.not.be.undefined;
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing get user reminder (GET /v1/spredcasts/reminder)', function () {
+    it('Should reply the user s reminders', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/reminders')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            expect(res.body[0].cast.name).to.equal(cast1.name);
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing get cast reminder (GET /v1/spredcast/:id/reminders)', function () {
+    it('Should reply the user reminded for the cast', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/' + cast1.id + '/reminders')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            expect(res.body[0].user.name).to.equal(user1.name);
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if user is not the creator of the cast', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/' + cast1.id + '/reminders')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token2.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(5);
+            expect(res.body.sub_code).to.equal(3);
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing get user is reminded (GET /v1/spredcast/:id/remind)', function () {
+    it('Should reply true if user is already reminded', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/' + cast1.id + '/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+
+    it('Should reply true if user is already reminded', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/' + cast1.id + '/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token2.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.false;
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing delete cast reminder (DELETE /v1/spredcast/:id/remind)', function () {
+    it('Should delete a reminder', function (done) {
+      apiSrv
+        .delete('/v1/spredcasts/' + cast1.id + '/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+
+    it('Should delete a reminder', function (done) {
+      apiSrv
+        .delete('/v1/spredcasts/' + cast1.id + '/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.code).to.equal(7);
+            expect(res.body.sub_code).to.equal(2);
             done();
           }
         });

@@ -395,6 +395,58 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
     });
   });
 
+  describe('Testing get user is reminded for castId (GET /v1/spredcast/remind?cast_id=...)', function () {
+    it('Should reply an array with boolean value', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/remind?cast_id=' + cast1.id + '&cast_id=' + cast2.id)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(2);
+            expect(res.body[0].id).to.equals(cast1.id);
+            expect(res.body[0].result).to.be.true;
+            expect(res.body[1].id).to.equals(cast2.id);
+            expect(res.body[1].result).to.be.false;
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if no cast id are given', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/remind')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if castId are not valid', function (done) {
+      apiSrv
+        .get('/v1/spredcasts/remind?cast_id=toto')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+  });
+
   describe('Testing delete cast reminder (DELETE /v1/spredcast/:id/remind)', function () {
     it('Should delete a reminder', function (done) {
       apiSrv

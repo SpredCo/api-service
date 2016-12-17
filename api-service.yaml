@@ -456,6 +456,28 @@ api:
                       description: User reminder
                       type: User reminder object array
           -
+            /v1/spredcasts/remind:
+              get:
+                summary: Check if user is reminded for cast id
+                description: Care cast_id get param is required like .../remind?cast_id=id1&cast_id=id2
+                tags:
+                - Bearer auth
+                parameters:
+                  -
+                    cast_id:
+                      description: Cast id to check
+                      in: query
+                      required: true
+                      type: string
+                responses:
+                  -
+                    200:
+                      description: result
+                      type: Cast reminder array
+                errors:
+                  - Invalid request
+                  - Cast not found
+          -
             /v1/spredcasts/{id}/remind:
               get:
                 summary: Check if user is already reminded for this cast
@@ -802,3 +824,10 @@ api:
             cast: "cast id"
             user: "user object"
             created_at: ""
+    -
+      Cast reminder array:
+        description: Cast reminder check array
+        obj:
+          -
+            id: "cast id"
+            result: "true/false"

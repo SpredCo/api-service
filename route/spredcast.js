@@ -6,6 +6,7 @@ var indexerFunc;
 function registerRoute (router, indexFunc) {
   router.get('/spredcasts', getUserCast);
   router.get('/spredcasts/reminders', getUserReminder);
+  router.get('/spredcasts/remind', userIsRemindedForCast);
   router.post('/spredcasts', createCast);
   router.get('/spredcasts/:id/remind', userIsReminded);
   router.post('/spredcasts/:id/remind', remindCast);
@@ -141,6 +142,43 @@ function userIsReminded (req, res, next) {
       });
     }
   });
+}
+
+function userIsRemindedForCast (req, res, next) {
+  var castIds = req.query.cast_id;
+  console.log(castIds);
+  if (castIds === undefined) {
+    httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
+  } else {
+    if (!Array.isArray(castIds)) {
+      castIds = [castIds];
+    }
+    common.spredcastReminderModel.getUserReminderByCastIds(castIds, req.user._id, function (err, fReminders) {
+      if (err) {
+        next(err);
+      } else if (fReminders === false) {
+        httpHelper.sendReply(res, httpHelper.error.castNotFound());
+      } else {
+        var rep = [];
+        var exist;
+        castIds.forEach(function (castId) {
+          exist = false;
+          fReminders.every(function (reminder) {
+            if (reminder.cast.toString() === castId) {
+              exist = true;
+              return false;
+            }
+            return true;
+          });
+          rep.push({
+            id: castId,
+            result: exist
+          });
+        });
+        httpHelper.sendReply(res, 200, rep);
+      }
+    });
+  }
 }
 
 function removeReminder (req, res, next) {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.1
+
+* Add route /v1/spredcast/remind to check if user has reminder on multiple cast
+
+*guedjm, Sat Dec 17 2016 11:17:31 GMT+0100 (CET)*
+
+---
 ## 0.12.0
 
 * Integrate cast reminders

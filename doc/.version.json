@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.12.1",
+    "author": "guedjm",
+    "date": "Sat Dec 17 2016 11:17:31 GMT+0100 (CET)",
+    "changes": [
+      "Add route /v1/spredcast/remind to check if user has reminder on multiple cast"
+    ]
+  },
+  {
     "version": "0.12.0",
     "author": "guedjm",
     "date": "Fri Dec 16 2016 21:05:23 GMT+0100 (CET)",

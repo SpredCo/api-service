@@ -481,4 +481,136 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
         });
     });
   });
+
+  describe('Testing subscription creation (POST /v1/tags/:id/subscribe)', function () {
+    it('Should create a subscription for user', function (done) {
+      apiSrv
+        .post('/v1/tags/' + tag1.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(201)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if tag id is bad', function (done) {
+      apiSrv
+        .post('/v1/tags/toto/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+
+    it('Should reply an error if user is already subscribed to the tag', function (done) {
+      apiSrv
+        .post('/v1/tags/' + tag1.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing get user subscription (GET /v1/tags/subscription)', function () {
+    it('Should return user subscription', function (done) {
+      apiSrv
+        .get('/v1/tags/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body).to.have.lengthOf(1);
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing check user is subscribed (GET /v1/tags/:id/subscription)', function () {
+    it('Should return true if user is already subscribed', function (done) {
+      apiSrv
+        .get('/v1/tags/' + tag1.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+
+    it('Should return false if user is not subscribed', function (done) {
+      apiSrv
+        .get('/v1/tags/' + tag2.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.false;
+            done();
+          }
+        });
+    });
+  });
+
+  describe('Testing unSubscription (DELETE /v1/tags/:id/subscription)', function () {
+    it('Should unSubscribe user to the tag', function (done) {
+      apiSrv
+        .delete('/v1/tags/' + tag1.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+
+    it('Should retur an error id user is not subscribed to the tag', function (done) {
+      apiSrv
+        .delete('/v1/tags/' + tag1.id + '/subscription')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(400)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+  });
 });

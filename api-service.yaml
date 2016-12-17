@@ -528,6 +528,58 @@ api:
                 errors:
                   - Cast not found
                   - Not cast creator
+    -
+      Tag:
+        text: Tags related routes
+        url:
+          -
+            /v1/tags/subscription:
+              get:
+                summary: Get user subscribed tags
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: User subscribed
+                      type: Subscription object array
+          -
+            /v1/tags/{id}/subcription:
+              get:
+                summary: Check if user is subscribed to the tag
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Check result
+                      type: Result object
+                errors:
+                  - Tag not found
+              post:
+                summary: Subscribe user to the tag
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    201:
+                      description: User subscribed
+                      type: Subscription object
+                errors:
+                  - Tag not found
+                  - Already subscribed
+              delete:
+                summary: Un-subscribe user to the tag
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Delete result
+                      type: Result object
+                errors:
+                  - Tag not found
+                  - Not subscribed
 
   errors:
     -
@@ -574,6 +626,18 @@ api:
         subcode: 2
         message: Not reminded for this cast
     -
+      Already subscribed:
+        status: 400
+        code: 8
+        subcode: 1
+        message: Already subscribed to this tag
+    -
+      Not subscribed:
+        status: 400
+        code: 8
+        subcode: 2
+        message: Not subscribed to this tag
+    -
       Not cast creator:
         status: 400
         code: 5
@@ -616,6 +680,12 @@ api:
         code: 4
         subcode: 1
         message: Unable to find message
+    -
+      Tag not found:
+        status: 404
+        code: 6
+        subcode: 1
+        message: Unable to find tag
 
   objects:
     -
@@ -831,3 +901,16 @@ api:
           -
             id: "cast id"
             result: "true/false"
+    -
+      Subscription object:
+        description: Subscription object
+        obj:
+          user: "user_id"
+          tag: "tag id"
+    -
+      Subscription object array:
+        description: Subscription object array
+        obj:
+          -
+            user: "user_id"
+            tag: "tag object"

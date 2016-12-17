@@ -146,7 +146,6 @@ function userIsReminded (req, res, next) {
 
 function userIsRemindedForCast (req, res, next) {
   var castIds = req.query.cast_id;
-  console.log(castIds);
   if (castIds === undefined) {
     httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
   } else {

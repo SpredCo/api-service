@@ -1,5 +1,17 @@
 [
   {
+    "version": "0.13.0",
+    "author": "guedjm",
+    "date": "Sat Dec 17 2016 13:21:02 GMT+0100 (CET)",
+    "changes": [
+      "Add tagSubcription",
+      "Add route GET /v1/tags/subsciption to get user subscription",
+      "Add route GET /v1/tags/:id/subscription to check if user is already subscribed to the tag",
+      "Add route POST /v1/tags/:id/subscription to subscribe user to the tag",
+      "Add route DELETE /v1/tags/:id/subscription to unsuscribe user to the tag"
+    ]
+  },
+  {
     "version": "0.12.1",
     "author": "guedjm",
     "date": "Sat Dec 17 2016 11:17:31 GMT+0100 (CET)",

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0
+
+* Add tagSubcription
+* Add route GET /v1/tags/subsciption to get user subscription
+* Add route GET /v1/tags/:id/subscription to check if user is already subscribed to the tag
+* Add route POST /v1/tags/:id/subscription to subscribe user to the tag
+* Add route DELETE /v1/tags/:id/subscription to unsuscribe user to the tag
+
+*guedjm, Sat Dec 17 2016 13:21:02 GMT+0100 (CET)*
+
+---
 ## 0.12.1
 
 * Add route /v1/spredcast/remind to check if user has reminder on multiple cast

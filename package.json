@@ -25,11 +25,11 @@
     "express": "^4.14.0",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
-    "spred-common": "git+ssh://git@github.com/spredco/common.git",
-    "spred-http-helper": "git+ssh://git@github.com/spredco/http-helper.git"
+    "spred-common": "git+https://github.com/spredco/common.git",
+    "spred-http-helper": "git+https://github.com/spredco/http-helper.git"
   },
   "devDependencies": {
-    "api-doc-generator": "git+ssh://git@github.com/guedjm/api-doc-generator.git",
+    "api-doc-generator": "git+https://github.com/guedjm/api-doc-generator.git",
     "chai": "^3.5.0",
     "config": "^1.21.0",
     "eslint": "^3.3.1",

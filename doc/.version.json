@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.13.1",
+    "author": "guedjm",
+    "date": "Mon Jan 02 2017 23:39:52 GMT+0100 (CET)",
+    "changes": [
+      "Fix inbox conversation creation"
+    ]
+  },
+  {
     "version": "0.13.0",
     "author": "guedjm",
     "date": "Sat Dec 17 2016 13:21:02 GMT+0100 (CET)",

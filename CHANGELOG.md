@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.1
+
+* Fix inbox conversation creation
+
+*guedjm, Mon Jan 02 2017 23:39:52 GMT+0100 (CET)*
+
+---
 ## 0.13.0
 
 * Add tagSubcription

@@ -71,10 +71,16 @@ function createNewConversation (req, res, next) {
           if (err) {
             next(err);
           } else {
-            var result = cConversation.toObject({ print: true });
-            result.msg = cMessage.toObject({ print: true });
-            result.msg.read = true;
-            httpHelper.sendReply(res, 201, result);
+            cConversation = cConversation.populate('members', function (err) {
+              if (err) {
+                next(err);
+              } else {
+                var result = cConversation.toObject({ print: true });
+                result.msg = cMessage.toObject({ print: true });
+                result.msg.read = true;
+                httpHelper.sendReply(res, 201, result);
+              }
+            });
           }
         });
       }

@@ -76,6 +76,7 @@ function createNewConversation (req, res, next) {
                 next(err);
               } else {
                 var result = cConversation.toObject({ print: true });
+                result.msg = [];
                 result.msg[0] = cMessage.toObject({ print: true });
                 result.msg[0].read = true;
                 httpHelper.sendReply(res, 201, result);

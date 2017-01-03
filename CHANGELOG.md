@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.0
+
+* Add route for cast deletion
+
+*guedjm, Tue Jan 03 2017 23:11:55 GMT+0100 (CET)*
+
+---
 ## 0.13.1
 
 * Fix inbox conversation creation

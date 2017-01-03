@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.14.0",
+    "author": "guedjm",
+    "date": "Tue Jan 03 2017 23:11:55 GMT+0100 (CET)",
+    "changes": [
+      "Add route for cast deletion"
+    ]
+  },
+  {
     "version": "0.13.1",
     "author": "guedjm",
     "date": "Mon Jan 02 2017 23:39:52 GMT+0100 (CET)",

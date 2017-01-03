@@ -419,6 +419,17 @@ api:
                       type: Spredcast
                 errors:
                   - Invalid request
+              delete:
+                summary: Delete a sprecast
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Cast deleted
+                      type: Result object
+                errors:
+                  - Cast not found
           -
             /v1/spredcasts/{id}/token:
               post:

@@ -189,12 +189,7 @@ describe('Testing inbox routes (/v1/inbox/*)', function () {
             expect(res.body.can_answer).to.be.true;
             expect(res.body.members).to.have.lengthOf(2);
             expect(res.body.id).to.not.be.undefined;
-            expect(res.body.msg).to.not.be.undefined;
-            expect(res.body.msg.id).to.not.be.undefined;
-            expect(res.body.msg.from).to.be.eql(user1._id.toString());
-            expect(res.body.msg.content).to.be.equal(fixture.content1);
-            expect(res.body.msg.read).to.be.true;
-            done();
+            expect(res.body.msg).to.have.lengthOf(1);done();
           }
         });
     });

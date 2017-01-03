@@ -613,4 +613,37 @@ describe('Testing spredcast routes (/v1/spredcast)', function () {
         });
     });
   });
+
+  describe('Testing cast deletion (DELETE /v1/spredcasts/:id)', function () {
+    it('Should return an error if user is not the creator', function (done) {
+      apiSrv
+        .delete('/v1/spredcasts/' + cast1.id)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token2.token)
+        .expect(404)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
+    });
+
+    it('Should delete the cast', function (done) {
+      apiSrv
+        .delete('/v1/spredcasts/' + cast1.id)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token1.token)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            done(err);
+          } else {
+            expect(res.body.result).to.be.true;
+            done();
+          }
+        });
+    });
+  });
 });

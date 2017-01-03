@@ -8,6 +8,7 @@ function registerRoute (router, indexFunc) {
   router.get('/spredcasts/reminders', getUserReminder);
   router.get('/spredcasts/remind', userIsRemindedForCast);
   router.post('/spredcasts', createCast);
+  router.delete('/spredcasts/:id', deleteCast);
   router.get('/spredcasts/:id/remind', userIsReminded);
   router.post('/spredcasts/:id/remind', remindCast);
   router.delete('/spredcasts/:id/remind', removeReminder);
@@ -62,6 +63,18 @@ function createCast (req, res, next) {
       }
     });
   }
+}
+
+function deleteCast (req, res, next) {
+  common.spredCastModel.removeCast(req.params.id, req.user._id, function (err, result) {
+    if (err) {
+      next(err);
+    } else if (result === false) {
+      httpHelper.sendReply(res, httpHelper.error.castNotFound());
+    } else {
+      httpHelper.sendReply(res, 200, { result: result });
+    }
+  });
 }
 
 function createCastToken (req, res, next) {

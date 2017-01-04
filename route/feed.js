@@ -6,13 +6,13 @@ function registerRoute (router) {
 }
 
 function getSubscription (req, res, next) {
-  common.tagModel.getUserFollow(req.user._id, function (err, fFollows) {
+  common.tagSubscriptionModel.getUserFollow(req.user._id, function (err, fFollows) {
     if (err) {
       next(err);
     } else {
       var cCreator = [];
       fFollows.forEach(function (fFollow) {
-        cCreator.push(fFollow._id);
+        cCreator.push(fFollow.following._id);
       });
       common.spredCastModel.find({ $or: [{ date: { $gt: new Date() }, state: 0 }, { state: 1 }], creator: { $in: cCreator } }).populate('creator tags').exec(function (err, fCasts) {
         if (err) {

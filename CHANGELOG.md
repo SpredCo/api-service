@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0
+
+* Add subscription feed route
+
+*guedjm, Wed Jan 04 2017 19:29:56 GMT+0100 (CET)*
+
+---
 ## 0.14.0
 
 * Add route for cast deletion

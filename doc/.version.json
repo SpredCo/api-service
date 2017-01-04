@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.15.0",
+    "author": "guedjm",
+    "date": "Wed Jan 04 2017 19:29:56 GMT+0100 (CET)",
+    "changes": [
+      "Add subscription feed route"
+    ]
+  },
+  {
     "version": "0.14.0",
     "author": "guedjm",
     "date": "Tue Jan 03 2017 23:11:55 GMT+0100 (CET)",

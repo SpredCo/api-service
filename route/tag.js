@@ -43,7 +43,6 @@ function subscribeTag (req, res, next) {
     } else if (fTag == null) {
       httpHelper.sendReply(res, httpHelper.error.tagNotFound());
     } else {
-      console.log(fTag);
       common.tagSubscriptionModel.userIsSubscribed(req.params.id, req.user._id, function (err, result) {
         if (err) {
           next(err);
@@ -54,7 +53,13 @@ function subscribeTag (req, res, next) {
             if (err) {
               next(err);
             } else {
-              httpHelper.sendReply(res, 201, cSubscription);
+              common.tagModel.followTag(req.params.id, function (err) {
+                if (err) {
+                  next(err);
+                } else {
+                  httpHelper.sendReply(res, 201, cSubscription);
+                }
+              });
             }
           });
         }
@@ -80,7 +85,13 @@ function unSubscribeTag (req, res, next) {
             if (err) {
               next(err);
             } else {
-              httpHelper.sendReply(res, 200, { result: result });
+              common.tagModel.unFollowTag(req.params.id, function (err) {
+                if (err) {
+                  next(err);
+                } else {
+                  httpHelper.sendReply(res, 200, { result: result });
+                }
+              });
             }
           });
         }

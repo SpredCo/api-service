@@ -591,6 +591,21 @@ api:
                 errors:
                   - Tag not found
                   - Not subscribed
+    -
+      Feed:
+        text: Feed related routes
+        url:
+          -
+            /v1/feed/subscription:
+              get:
+                summary: Get feed subscription
+                tags:
+                  - Bearer Auth
+                responses:
+                  -
+                    200:
+                      description: Feed
+                      type: Spredcast array
 
   errors:
     -

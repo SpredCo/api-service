@@ -6,7 +6,7 @@ function registerRoute (router) {
 }
 
 function getSubscription (req, res, next) {
-  common.tagSubscriptionModel.getUserFollow(req.user._id, function (err, fFollows) {
+  common.followModel.getUserFollow(req.user._id, function (err, fFollows) {
     if (err) {
       next(err);
     } else {

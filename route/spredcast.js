@@ -39,7 +39,7 @@ function createCast (req, res, next) {
       } else if (result === false) {
         httpHelper.sendReply(res, httpHelper.error.invalidRequestError());
       } else {
-        const url = req.body.name.split(' ').join('-') + '-' + common.utils.uidGen(3);
+        const url = encodeURIComponent(req.body.name.split(' ').join('-') + '-' + common.utils.uidGen(3));
         common.spredCastModel.createNew(req.user._id, req.body.name, req.body.description, req.body.tags, req.body.date, req.body.is_public,
           req.body.user_capacity, req.body.members, req.body.duration, url.toLowerCase(), req.body.cover_url, function (err, cCast) {
             if (err) {

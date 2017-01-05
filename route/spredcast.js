@@ -48,7 +48,7 @@ function createCast (req, res, next) {
               common.spredCastModel.getByUrl(cCast.url, function (err, fCast) {
                 if (err) {
                   next(err);
-                } else {
+                } else if (fCast.isPublic) {
                   addCastToIndex(fCast, function (err) {
                     if (err) {
                       next(err);
@@ -56,6 +56,8 @@ function createCast (req, res, next) {
                       httpHelper.sendReply(res, 201, fCast);
                     }
                   });
+                } else {
+                  httpHelper.sendReply(res, 201, fCast);
                 }
               });
             }
